@@ -13,7 +13,7 @@ export interface TokenData {
   refresh_token_expire: string;
 }
 
-export interface User {
+export interface UserT {
   full_name: string;
   username: string;
   password: string;
@@ -27,5 +27,5 @@ export interface LoginResponse {
   status: number;
   message: string;
   data: TokenData;
-  user: User;
+  user: UserT;
 }

@@ -3,3 +3,10 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+.ant-layout-sider-children {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+

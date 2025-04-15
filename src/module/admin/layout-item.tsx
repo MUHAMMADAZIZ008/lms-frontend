@@ -5,17 +5,17 @@ import { TeacherIcon } from "../../assets/components/teacher-icon";
 
 export const layoutItem = [
   {
-    path: "/",
+    path: "/admin",
     icon: MainIcon,
     title: "Asosiy",
   },
   {
-    path: "/students",
+    path: "/admin/students",
     icon: StudentIcon,
     title: "O’quvchilar",
   },
   {
-    path: "/teachers",
+    path: "/admin/teachers",
     icon: TeacherIcon,
     title: "O’qituvchilar",
   },
@@ -24,11 +24,11 @@ export const layoutItem = [
     title: "Bo'limlar",
     children: [
       {
-        path: "/groups",
+        path: "/admin/groups",
         title: "Guruhlar",
       },
       {
-        path: "/courses",
+        path: "/admin/courses",
         title: "Kurslar",
       },
     ],

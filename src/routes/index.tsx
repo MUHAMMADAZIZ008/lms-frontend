@@ -3,6 +3,7 @@ import Login from "../components/login/login";
 import ProtectedRoute from "../components/protected-route";
 import { AdminLayout } from "../module/admin/admin-layout";
 import { UserRole } from "../common/enum";
+import { TeacherLayout } from "../module/teacher/teacher-layout";
 
 interface RouteT {
   path?: string;
@@ -21,13 +22,25 @@ export const routes: RouteT[] = [
     element: <Login />,
   },
   {
-    path: "/",
-    element: <ProtectedRoute roles={[UserRole.ADMIN]}/>,
+    path: "/admin",
+    element: <ProtectedRoute roles={[UserRole.ADMIN]} />,
     children: [
       {
-        path: "admin",
+        index: true,
         element: <AdminLayout />,
       },
     ],
   },
+
+  {
+    path: "/teacher",
+    element: <ProtectedRoute roles={[UserRole.TEACHER]} />,
+    children: [
+      {
+        index: true,
+        element: <TeacherLayout />,
+      },
+    ],
+  },
+
 ];

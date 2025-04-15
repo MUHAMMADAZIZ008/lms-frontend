@@ -6,16 +6,28 @@ import { UserOutlined } from "@ant-design/icons";
 
 const { Header, Sider, Content } = Layout;
 import Logo from "../../assets/svg/site-logo.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { SettingsIcon } from "../../assets/components/settings-icon";
+import LogoutIcon from "../../assets/components/logout-icon";
+import { useAuthStore } from "../../store/use-auth-store";
 
 export const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const { logOut, user } = useAuthStore();
 
+  const navigate = useNavigate();
   const menu = layoutItem.map((item: any, index: number) => {
     return {
       key: index,
-      icon: createElement(item.icon),
-      label: <Link to={item?.path || "#"}>{<p style={{ fontWeight: '500', fontSize: "18px" }}>{item?.title}</p>}</Link>,
+      icon:
+        // <button style={{ display: "inline", margin: "0 auto", textAlign: 'center'}}>
+        createElement(item.icon),
+      // {/* </button> */}
+      label: (
+        <Link to={item?.path || "#"}>
+          {<p style={{ fontWeight: "500", fontSize: "18px" }}>{item?.title}</p>}
+        </Link>
+      ),
 
       children: item.children?.length
         ? item.children.map((innerItem: any) => ({
@@ -25,6 +37,11 @@ export const AdminLayout = () => {
         : undefined,
     };
   });
+
+  const logoutFn = () => {
+    logOut();
+    navigate("/login");
+  };
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -36,6 +53,9 @@ export const AdminLayout = () => {
         collapsed={collapsed}
         style={{
           padding: "16px 0",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
         }}
       >
         {/* Logo */}
@@ -51,9 +71,28 @@ export const AdminLayout = () => {
         <Menu
           theme="light"
           mode="inline"
-          defaultSelectedKeys={["1"]}
+          defaultSelectedKeys={["0"]}
           items={menu}
         />
+
+        <div style={{ marginTop: "auto", padding: "0 16px" }}>
+          <div style={{ padding: "12px 0" }}>
+            <Link to="/settings">
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <SettingsIcon />
+                {!collapsed && <span>Sozlamalar</span>}
+              </div>
+            </Link>
+          </div>
+          <div style={{ padding: "12px 0" }}>
+            <Button variant="outlined" onClick={logoutFn}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <LogoutIcon />
+                {!collapsed && <span>Chiqish</span>}
+              </div>
+            </Button>
+          </div>
+        </div>
       </Sider>
 
       <Layout>
@@ -78,9 +117,20 @@ export const AdminLayout = () => {
             <Input.Search placeholder="Qidiruv tizimi..." allowClear />
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
             <Avatar icon={<UserOutlined />} />
-            <span>Ruslan Mirzaev</span>
+            <div>
+              <p
+                style={{
+                  lineHeight: "none",
+                  fontWeight: "600",
+                  fontSize: "18px",
+                }}
+              >
+                {user?.full_name}
+              </p>
+              <p style={{ lineHeight: "none" }}>{user?.role}</p>
+            </div>
           </div>
         </Header>
 

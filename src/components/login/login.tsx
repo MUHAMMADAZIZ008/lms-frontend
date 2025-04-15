@@ -1,8 +1,9 @@
 import { Button, Form, FormProps, Input, message } from "antd";
 import useLogin from "./service/mutation/use-login";
 import { SaveCookie } from "../../config/cookie";
-import { CookiesEnum } from "../../common/enum";
+import { CookiesEnum, UserRole } from "../../common/enum";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../../store/use-auth-store";
 
 type FieldType = {
   username: string;
@@ -10,6 +11,7 @@ type FieldType = {
 };
 
 const Login = () => {
+  const { logIn } = useAuthStore();
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -21,21 +23,16 @@ const Login = () => {
       },
       onSuccess(data) {
         SaveCookie(
-          CookiesEnum.ACCESS_TOKEN,
-          data.data.accessToken,
-          data.data.access_token_expire
-        );
-        SaveCookie(
           CookiesEnum.REFRESH_TOKEN,
-          data.data.refreshToken,
+          JSON.stringify(data.data.refreshToken),
           data.data.refresh_token_expire
         );
-        SaveCookie(
-          CookiesEnum.LOGIN_USER,
-          data.user,
-          data.data.access_token_expire
-        );
-        navigate("/");
+        logIn({ user: data.user, data: data.data });
+        if (data.user.role === UserRole.ADMIN) {
+          navigate("/admin");
+        } else if (data.user.role === UserRole.TEACHER) {
+          navigate("/teacher");
+        }
       },
     });
   };
