@@ -2,6 +2,7 @@ import React from "react";
 import Login from "../components/login/login";
 import ProtectedRoute from "../components/protected-route";
 import { AdminLayout } from "../module/admin/admin-layout";
+import { UserRole } from "../common/enum";
 
 interface RouteT {
   path?: string;
@@ -20,10 +21,11 @@ export const routes: RouteT[] = [
     element: <Login />,
   },
   {
-    element: <ProtectedRoute />,
+    path: "/",
+    element: <ProtectedRoute roles={[UserRole.ADMIN]}/>,
     children: [
       {
-        path: "/",
+        path: "admin",
         element: <AdminLayout />,
       },
     ],
