@@ -18,16 +18,8 @@ export const useAuthStore = create<storeT>()((set) => ({
   token: Cookie.get(CookiesEnum.ACCESS_TOKEN) as string,
   isLogged: !!Cookie.get(CookiesEnum.ACCESS_TOKEN),
   logIn: ({ user, data }: { user: UserT; data: TokenData }) => {
-    SaveCookie(
-      CookiesEnum.LOGIN_USER,
-      user,
-      data.access_token_expire
-    );
-    SaveCookie(
-      CookiesEnum.ACCESS_TOKEN,
-      data.accessToken,
-      data.access_token_expire
-    );
+    SaveCookie(CookiesEnum.LOGIN_USER, user, data.access_token_expire);
+    Cookie.set(CookiesEnum.ACCESS_TOKEN, data.accessToken);
     set({ user, token: data.accessToken, isLogged: true });
   },
   logOut: () => {

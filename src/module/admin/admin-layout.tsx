@@ -1,4 +1,4 @@
-import { createElement, useState } from "react";
+import React, { createElement, useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Button, Layout, Menu, Input, Avatar } from "antd";
 import { layoutItem } from "./layout-item";
@@ -11,7 +11,7 @@ import { SettingsIcon } from "../../assets/components/settings-icon";
 import LogoutIcon from "../../assets/components/logout-icon";
 import { useAuthStore } from "../../store/use-auth-store";
 
-export const AdminLayout = () => {
+export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const [collapsed, setCollapsed] = useState(false);
   const { logOut, user } = useAuthStore();
 
@@ -56,10 +56,17 @@ export const AdminLayout = () => {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
+          backgroundColor: '#fff'
         }}
       >
         {/* Logo */}
-        <div style={{ textAlign: "center", marginBottom: 24 }}>
+        <div
+          style={{
+            textAlign: "center",
+            marginBottom: 24,
+            backgroundColor: "#fff",
+          }}
+        >
           <img
             src={Logo}
             alt="Logo"
@@ -73,6 +80,7 @@ export const AdminLayout = () => {
           mode="inline"
           defaultSelectedKeys={["0"]}
           items={menu}
+          style={{ backgroundColor: "#fff" }}
         />
 
         <div style={{ marginTop: "auto", padding: "0 16px" }}>
@@ -121,6 +129,7 @@ export const AdminLayout = () => {
             <Avatar icon={<UserOutlined />} />
             <div>
               <p
+                className="header__name_text"
                 style={{
                   lineHeight: "none",
                   fontWeight: "600",
@@ -129,12 +138,14 @@ export const AdminLayout = () => {
               >
                 {user?.full_name}
               </p>
-              <p style={{ lineHeight: "none" }}>{user?.role}</p>
+              <p className="header__name_text" style={{ lineHeight: "none" }}>
+                {user?.role}
+              </p>
             </div>
           </div>
         </Header>
 
-        {/* Content */}
+        {children}
         <Content
           style={{
             padding: 24,

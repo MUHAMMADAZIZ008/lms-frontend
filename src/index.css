@@ -10,3 +10,13 @@
     justify-content: space-between;
 }
 
+.header__name_text {
+    line-height: normal !important;
+}
+
+ul, ol, li {
+    list-style: none;
+}
+a {
+    text-decoration: none;
+}

@@ -1,0 +1,66 @@
+.admin_main-header {
+    padding: 20px;
+    background-color: #F9F9F9;
+    border-bottom: 2px solid #ddd;
+}
+
+.admin__main-content {
+    padding: 40px 20px 50px;
+}
+
+.main__content-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 20px;
+
+}
+.content__box-main {
+    background-color: #fff;
+    grid-column: span 3;
+    border-radius: 4px;
+}
+
+.content__control-box {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ddd;
+}
+
+.content__control-title {
+    font-size: 24px;
+    font-weight: 500;
+}
+.content__control-title span {
+    font-size: 22px;
+    color: #557C83;
+}
+.content__control-wrap {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.content__control-list-box {
+    padding: 20px;
+}
+.control-list-title-box {
+    display: grid;
+    grid-template-columns: 40px 4fr 1.5fr 1fr 1.5fr;
+    padding: 10px;
+    font-weight: bold;
+    color: #9f9f9f;
+}
+.content__control-list-wrap {
+    display: flex;
+    flex-direction: column;
+}
+.content__teacher-cart {
+    display: grid;
+    grid-template-columns: 40px 4fr 1.5fr 1fr 1.5fr;
+    padding: 15px;
+    border: 2px solid #ddd;
+    box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
