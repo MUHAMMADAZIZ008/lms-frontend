@@ -44,7 +44,7 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ minHeight: "100vh", overflow: 'hidden'}}>
       {/* Sidebar */}
       <Sider
         theme="light"
@@ -56,7 +56,7 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          backgroundColor: '#fff'
+          backgroundColor: "#fff",
         }}
       >
         {/* Logo */}
@@ -145,14 +145,14 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
           </div>
         </Header>
 
-        {children}
         <Content
           style={{
-            padding: 24,
-            minHeight: 280,
-            background: "#F9F9F9",
+            height: 'calc(100vh - 64px)',
+            overflowY: 'auto'
           }}
-        ></Content>
+        >
+          {children}
+        </Content>
       </Layout>
     </Layout>
   );

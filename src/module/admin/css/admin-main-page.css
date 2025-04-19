@@ -6,6 +6,9 @@
 
 .admin__main-content {
     padding: 40px 20px 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .main__content-top {
@@ -14,6 +17,7 @@
     gap: 20px;
 
 }
+
 .content__box-main {
     background-color: #fff;
     grid-column: span 3;
@@ -32,10 +36,12 @@
     font-size: 24px;
     font-weight: 500;
 }
+
 .content__control-title span {
     font-size: 22px;
     color: #557C83;
 }
+
 .content__control-wrap {
     display: flex;
     align-items: center;
@@ -45,6 +51,7 @@
 .content__control-list-box {
     padding: 20px;
 }
+
 .control-list-title-box {
     display: grid;
     grid-template-columns: 40px 4fr 1.5fr 1fr 1.5fr;
@@ -52,10 +59,14 @@
     font-weight: bold;
     color: #9f9f9f;
 }
+
 .content__control-list-wrap {
     display: flex;
     flex-direction: column;
+    gap: 15px;
+    overflow: auto;
 }
+
 .content__teacher-cart {
     display: grid;
     grid-template-columns: 40px 4fr 1.5fr 1fr 1.5fr;
@@ -63,4 +74,86 @@
     border: 2px solid #ddd;
     box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.1);
     border-radius: 4px;
+}
+
+.statistic-box-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.statistic-box {
+    padding: 21px 21px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    background-image: url('../../../assets/png/statistic-bg.png');
+    background-repeat: no-repeat;
+    background-size: 110px;
+    background-position: 95% 15%;
+}
+
+.statistic-box_title {
+    font-weight: 500;
+    font-size: 16px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.statistic-box_sum {
+    font-weight: 400;
+    font-size: 26px;
+    margin-bottom: 20px;
+}
+
+.statistic-text-wrap {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.main__content-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 20px;
+
+}
+
+.content-bottom_main {
+    grid-column: span 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.content-bottom_main-box {
+    background-color: #fff;
+    border-radius: 4px;
+
+}
+
+.bottom_main-header {
+    padding: 20px 20px 0;
+    border-bottom: 2px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.bottom_main-header_title {
+    font-weight: 400;
+    font-size: 26px !important;
+    max-width: 250px;
+}
+
+.chart-box {
+    width: 300px;
+    height: 300px !important;
+    margin: 0 auto;
+}
+
+.bottom_main-header-present {
+    font-weight: 400;
+    font-size: 50px;
+    color: #557c83;
 }
