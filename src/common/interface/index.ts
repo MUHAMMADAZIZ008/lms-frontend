@@ -84,17 +84,23 @@ export interface StudentResponse {
   };
 }
 
+export interface ImageT {
+  url: string;
+}
 export interface Student {
   full_name: string;
   username: string;
   password: string;
   role: "STUDENT";
   gender: "MALE" | "FEMALE";
+  phone_number: string;
+  address: string;
   data_of_birth: string;
   created_at: string;
   updated_at: string;
   user_id: string;
   group_members: GroupMember[];
+  images: ImageT[];
 }
 
 export interface GroupMember {
@@ -111,8 +117,7 @@ export interface Group {
   group_id: string;
 }
 
-
-// pagination 
+// pagination
 export interface PaginationT {
   page: number;
   limit: number;

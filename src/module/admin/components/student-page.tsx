@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { PaginationLeftIcon } from "../../../assets/components/pagination-left-icon";
 import { PaginationRightIcon } from "../../../assets/components/pagination-right-icon";
 import { PaginationT } from "../../../common/interface";
+import StudentCard from "./student-card";
 // import editIcon from '../../../assets/png/edit-icon.png'
 // import deleteIcon from '../../../assets/png/delete-icon.png'
 
@@ -79,6 +80,8 @@ export const StudentPage = () => {
           <p>Bolalar F.I.O</p>
           <p>Tug’ilgan sana</p>
           <p>Jinsi</p>
+          <p>Telfon raqami</p>
+          <p>Uy manzili</p>
           <p>Gurux nomi</p>
           <p>Imkonyatlar</p>
         </div>
@@ -87,39 +90,7 @@ export const StudentPage = () => {
             <h2>Loading...</h2>
           ) : (
             data?.data.map((item, i) => (
-              <ul className="student__content-card" key={item.user_id}>
-                <li>
-                  <p>{i + 1}</p>
-                </li>
-                <li>
-                  <p>{item.full_name}</p>
-                </li>
-                <li>
-                  <p>{item.data_of_birth.split("T")[0]}</p>
-                </li>
-                <li>
-                  <p
-                    style={
-                      item.gender === "MALE"
-                        ? { color: "#3aada8" }
-                        : { color: "#ff5f5f" }
-                    }
-                  >
-                    {item.gender}
-                  </p>
-                </li>
-                <li>
-                  <p>{item.group_members[0]?.group.name}</p>
-                </li>
-                <li>
-                  <button>
-                    <EditIcon />
-                  </button>
-                  <button>
-                    <DeleteIcon />
-                  </button>
-                </li>
-              </ul>
+              <StudentCard key={item.user_id} item={item} i={i} />
             ))
           )}
         </div>
