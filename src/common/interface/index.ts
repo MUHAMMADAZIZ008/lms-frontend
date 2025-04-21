@@ -1,4 +1,4 @@
-import { UserRole } from "../enum";
+import { PaymentEnum, UserGender, UserRole } from "../enum";
 
 // login
 export interface LoginT {
@@ -59,8 +59,8 @@ interface AgeStats {
 }
 
 interface TeachersResponseData {
-  teacherCount: number;
-  teachers: Teacher[];
+  userCount: number;
+  users: Teacher[];
   income: IncomeOrCost;
   cost: IncomeOrCost;
   studentCount: number;
@@ -121,4 +121,91 @@ export interface Group {
 export interface PaginationT {
   page: number;
   limit: number;
+}
+
+// student create form
+
+export interface StudentFieldType {
+  data_of_birth: string | Date;
+  phone_number: string;
+  sum: number;
+  paymentType: PaymentEnum;
+  address: string;
+  password: string;
+  username: string;
+  full_name: string;
+  img_url: string;
+  groupId: string;
+  gender: UserGender
+}
+
+
+
+// group get
+
+export interface ResponseGroup {
+  status: number;
+  message: string;
+  data: Group[];
+  meta: Meta;
+}
+
+export interface Meta {
+  totalCount: number;
+  page: number;
+  limit: number;
+}
+
+export interface Group {
+  group_id: string;
+  name: string;
+  description: string;
+  course_id: string;
+  teacher_id: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  course: Course;
+  teacher: User;
+  group_members: GroupMember[];
+}
+
+export interface Course {
+  course_id: string;
+  name: string;
+  description: string;
+  duration: number;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface User {
+  user_id: string;
+  full_name: string;
+  username: string;
+  password: string;
+  role: "TEACHER" | "STUDENT";
+  address: string;
+  phone_number: string;
+  gender: "MALE" | "FEMALE";
+  data_of_birth: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GroupMember {
+  group_members_id: string;
+  group_id: string;
+  user_id: string;
+  created_at: string;
+  updated_at: string;
+  user: User;
+}
+
+
+// dashboard
+export interface DashboardT {
+  fullname?: string | undefined;
+  category?: string | undefined;
 }

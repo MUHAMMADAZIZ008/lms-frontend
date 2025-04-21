@@ -2,17 +2,15 @@ import { Button, Select } from "antd";
 import { PlusIcon } from "../../../assets/components/plus-icon";
 import "../css/student-page.css";
 import { useGetAllStudent } from "../service/query/use-get-all-student";
-import { EditIcon } from "../../../assets/components/edit-icon";
-import { DeleteIcon } from "../../../assets/components/delete-icon";
 import { useEffect, useState } from "react";
 import { PaginationLeftIcon } from "../../../assets/components/pagination-left-icon";
 import { PaginationRightIcon } from "../../../assets/components/pagination-right-icon";
 import { PaginationT } from "../../../common/interface";
-import StudentCard from "./student-card";
-// import editIcon from '../../../assets/png/edit-icon.png'
-// import deleteIcon from '../../../assets/png/delete-icon.png'
+import StudentCard from "../components/student-card";
+import { useNavigate } from "react-router-dom";
 
 export const StudentPage = () => {
+  const navigate = useNavigate();
   const [paginationData, setPaginationData] = useState<PaginationT>({
     limit: 6,
     page: 1,
@@ -64,12 +62,20 @@ export const StudentPage = () => {
     setSelectionOption(selectOption);
   }, []);
 
+  const studentCreateNavigate = () => {
+    navigate("/admin/student-create");
+  };
+
   return (
     <section className="student-page">
       <div className="student__header">
         <h2 className="student__header-title">O’quvchilar jadvali</h2>
         <div className="student__header-wrap">
-          <Button style={{ padding: "10px 20px" }} icon={<PlusIcon />}>
+          <Button
+            onClick={studentCreateNavigate}
+            style={{ padding: "10px 20px" }}
+            icon={<PlusIcon />}
+          >
             Qo’shish
           </Button>
         </div>

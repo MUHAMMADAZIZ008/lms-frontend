@@ -1,4 +1,4 @@
-import { Button, Form, FormProps, Input, message } from "antd";
+import { Button, Form, FormProps, Input, message, notification } from "antd";
 import useLogin from "./service/mutation/use-login";
 import { SaveCookie } from "../../config/cookie";
 import { CookiesEnum, UserRole } from "../../common/enum";
@@ -13,14 +13,14 @@ type FieldType = {
 const Login = () => {
   const { logIn } = useAuthStore();
   const navigate = useNavigate();
-  const [messageApi, contextHolder] = message.useMessage();
+
+  const [form] = Form.useForm();
+
+  const [api, contextHolderNot] = notification.useNotification();
 
   const { mutate, isPending } = useLogin();
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
     mutate(values, {
-      onError(error) {
-        messageApi.error(error?.response.data.message);
-      },
       onSuccess(data) {
         SaveCookie(
           CookiesEnum.REFRESH_TOKEN,
@@ -33,6 +33,15 @@ const Login = () => {
         } else if (data.user.role === UserRole.TEACHER) {
           navigate("/teacher");
         }
+      },
+      onError(error) {
+        if (error.response.data.statusCode === 401) {
+          api.error({
+            message: "Parol yoki username xato!",
+            placement: "topRight",
+          });
+        }
+        form.resetFields();
       },
     });
   };
@@ -47,8 +56,9 @@ const Login = () => {
         justifyContent: "center",
       }}
     >
-      {contextHolder}
+      {contextHolderNot}
       <Form
+        form={form}
         name="auth"
         layout="vertical"
         style={{ width: 350 }}

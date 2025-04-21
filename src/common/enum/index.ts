@@ -10,3 +10,12 @@ export enum CookiesEnum {
   REFRESH_TOKEN = "refresh_token",
   LOGIN_USER = "login_user",
 }
+export enum PaymentEnum {
+  CASH = 'CASH',
+  CREDIT_CARD = 'CREDIT_CARD',
+}
+
+export enum UserGender {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
+}

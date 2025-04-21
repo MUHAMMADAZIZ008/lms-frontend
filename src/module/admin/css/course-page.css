@@ -1,0 +1,29 @@
+.course__header {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+}
+
+.course__content {
+    padding: 40px 20px;
+}
+.course__content-header {
+    padding: 20px 35px;
+    display: grid;
+    grid-template-columns: 0.5fr repeat(8, 1fr);
+}
+.course__content-header > p {
+    color: #9f9f9f;
+    font-size: 18px;
+}
+.course__content-header > p:nth-child(2) {
+    grid-column: span 2;
+}
+.course__content-header > p:nth-child(3) {
+    grid-column: span 3;
+}
+
+.course__content-header > p:nth-child(6) {
+}

@@ -18,29 +18,29 @@ request.interceptors.request.use((config) => {
   return config;
 });
 
-const refreshAuthLogic = async (failedRequest: {
-  response: { config: { headers: { [x: string]: string } } };
-}) => {
-  try {
-    const response = await request.post(
-      "/auth/refresh",
-      GetCookie(CookiesEnum.REFRESH_TOKEN)
-    );
-    const newAccessToken = response.data.accessToken;
-    Cookie.set(CookiesEnum.ACCESS_TOKEN, newAccessToken);
-    failedRequest.response.config.headers[
-      "Authorization"
-    ] = `Bearer ${newAccessToken}`;
-    return Promise.resolve();
-  } catch (err) {
-    Cookie.remove(CookiesEnum.ACCESS_TOKEN);
-    Cookie.remove(CookiesEnum.REFRESH_TOKEN);
-    console.error("Error refreshing access token:", err);
-    window.location.href = "/login";
-    return Promise.reject(err);
-  }
-};
+// const refreshAuthLogic = async (failedRequest: {
+//   response: { config: { headers: { [x: string]: string } } };
+// }) => {
+//   try {
+//     const response = await request.post(
+//       "/auth/refresh",
+//       GetCookie(CookiesEnum.REFRESH_TOKEN)
+//     );
+//     const newAccessToken = response.data.accessToken;
+//     Cookie.set(CookiesEnum.ACCESS_TOKEN, newAccessToken);
+//     failedRequest.response.config.headers[
+//       "Authorization"
+//     ] = `Bearer ${newAccessToken}`;
+//     return Promise.resolve();
+//   } catch (err) {
+//     Cookie.remove(CookiesEnum.ACCESS_TOKEN);
+//     Cookie.remove(CookiesEnum.REFRESH_TOKEN);
+//     console.error("Error refreshing access token:", err);
+//     window.location.href = "/login";
+//     return Promise.reject(err);
+//   }
+// };
 
-createAuthRefreshInterceptor(request, refreshAuthLogic, {
-  statusCodes: [401],
-});
+// createAuthRefreshInterceptor(request, refreshAuthLogic, {
+//   statusCodes: [401],
+// });

@@ -9,11 +9,13 @@ import { Pie } from "@ant-design/charts";
 import Title from "antd/es/typography/Title";
 import { UsersIcon } from "../../../assets/components/users-icon";
 import { Skeleton } from "antd";
+import { UserRole } from "../../../common/enum";
+import { DashboardT } from "../../../common/interface";
 
 const boxes = [
-  { id: 1, title: "O’qituvchilar" },
-  { id: 2, title: "Tarbiyachilar" },
-  { id: 3, title: "Ishchilar" },
+  { id: undefined , title: "Hammasi" },
+  { id: UserRole.TEACHER, title: "O'qtuvchilar" },
+  { id: UserRole.STUDENT, title: "O'quvchilar" },
 ];
 
 interface chartDataT {
@@ -24,14 +26,21 @@ interface chartDataT {
 export const AdminMainPage = () => {
   const [selectedBtn, setSelectedBtn] = useState<string>(boxes[0].title);
   const [chartData, setChartData] = useState<chartDataT[]>([]);
-  const { data, isLoading } = useGetDashboard();
 
+  const [dashboardConfig, setDashboardConfig] = useState<DashboardT>({
+    category: undefined,
+  });
+  const { data, isLoading } = useGetDashboard(dashboardConfig);
+
+  
   useEffect(() => {
     if (data?.data?.ageStats) {
-      const newChartData = Object.entries(data.data.ageStats).map(([key, value]) => ({
-        type: key,
-        value: value as number,
-      }));
+      const newChartData = Object.entries(data.data.ageStats).map(
+        ([key, value]) => ({
+          type: key,
+          value: value as number,
+        })
+      );
       setChartData(newChartData);
     }
   }, [data]);
@@ -49,6 +58,11 @@ export const AdminMainPage = () => {
 
   if (isLoading) return <Skeleton active />;
 
+  const categorySelectFn = (item: any) => {
+    setSelectedBtn(item.title);
+    setDashboardConfig((state) => ({ ...state, category: item.id }));
+  };
+
   return (
     <section className="admin__main-page">
       <div className="admin_main-header">
@@ -59,14 +73,16 @@ export const AdminMainPage = () => {
           <div className="content__box-main">
             <div className="content__control-box">
               <h3 className="content__control-title">
-                O’qituvchilar soni: <span>{data?.data.teacherCount} ta</span>
+                {selectedBtn} soni: <span>{data?.data.userCount} ta</span>
               </h3>
               <div className="content__control-wrap">
                 {boxes.map((item) => (
                   <Button
-                    key={item.id}
-                    style={selectedBtn === item.title ? { color: "#3aada8" } : {}}
-                    onClick={() => setSelectedBtn(item.title)}
+                    key={item.title}
+                    style={
+                      selectedBtn === item.title ? { color: "#3aada8" } : {}
+                    }
+                    onClick={() => categorySelectFn(item)}
                   >
                     {item.title}
                   </Button>
@@ -82,13 +98,17 @@ export const AdminMainPage = () => {
                 <p>Username</p>
               </div>
               <div className="content__control-list-wrap">
-                {data?.data.teachers?.map((item, i) => (
+                {data?.data.users?.map((item, i) => (
                   <ul key={item.user_id} className="content__teacher-cart">
                     <li>{i + 1}</li>
                     <li>{item.full_name}</li>
                     <li>{item.data_of_birth.split("T")[0]}</li>
                     <li>
-                      <Typography style={{ color: item.gender === "MALE" ? "#3aada8" : "#ff5f5f" }}>
+                      <Typography
+                        style={{
+                          color: item.gender === "MALE" ? "#3aada8" : "#ff5f5f",
+                        }}
+                      >
                         {item.gender === "MALE" ? "Erkak" : "Ayol"}
                       </Typography>
                     </li>
@@ -108,7 +128,14 @@ export const AdminMainPage = () => {
                 <p>
                   O'tgan oyga nisbatan
                   {data?.data.income.percent !== undefined && (
-                    <span style={{ color: data?.data.income.percent >= 0 ? "#3aada8" : "#FF8484" }}>
+                    <span
+                      style={{
+                        color:
+                          data?.data.income.percent >= 0
+                            ? "#3aada8"
+                            : "#FF8484",
+                      }}
+                    >
                       {data?.data.income.percent >= 0 ? "+" : ""}
                       {data?.data.income.percent}%
                     </span>
@@ -125,7 +152,12 @@ export const AdminMainPage = () => {
                 <p>
                   O'tgan oyga nisbatan
                   {data?.data.cost.percent !== undefined && (
-                    <span style={{ color: data?.data.cost.percent >= 0 ? "#3aada8" : "#FF8484" }}>
+                    <span
+                      style={{
+                        color:
+                          data?.data.cost.percent >= 0 ? "#3aada8" : "#FF8484",
+                      }}
+                    >
                       {data?.data.cost.percent >= 0 ? "+" : ""}
                       {data?.data.cost.percent}%
                     </span>
@@ -145,7 +177,9 @@ export const AdminMainPage = () => {
                 </Title>
                 <p className="bottom_main-header-present">100%</p>
               </div>
-              {chartData.length > 0 && <Pie className="chart-box" {...chartConfig} />}
+              {chartData.length > 0 && (
+                <Pie className="chart-box" {...chartConfig} />
+              )}
             </div>
           </div>
           <div className="button__right-box">

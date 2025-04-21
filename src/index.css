@@ -14,12 +14,26 @@
     line-height: normal !important;
 }
 
-ul, ol, li {
+ul,
+ol,
+li {
     list-style: none;
 }
+
 a {
     text-decoration: none;
 }
+
 button {
     cursor: pointer;
+}
+
+.custom-upload .ant-upload {
+    width: 200px !important;
+    height: 156px !important;
+}
+
+.custom-upload .ant-upload-list-item {
+    width: 200px !important;
+    height: 156px !important;
 }

@@ -3,9 +3,11 @@ import Login from "../components/login/login";
 import ProtectedRoute from "../components/protected-route";
 import { UserRole } from "../common/enum";
 import { TeacherLayout } from "../module/teacher/teacher-layout";
-import { AdminMainPage } from "../module/admin/components/admin-main-page";
+import { AdminMainPage } from "../module/admin/pages/admin-main-page";
 import { RouteSlash } from "../components/route-slash";
-import { StudentPage } from "../module/admin/components/student-page";
+import { StudentPage } from "../module/admin/pages/student-page";
+import { StudentCreate } from "../module/admin/pages/student-create";
+import { CoursePage } from "../module/admin/pages/course-page";
 
 interface RouteT {
   path?: string;
@@ -46,6 +48,14 @@ export const routes: RouteT[] = [
         path: "/admin/students",
         element: <StudentPage />,
       },
+      {
+        path: "/admin/student-create",
+        element: <StudentCreate />,
+      },
+      {
+        path: '/admin/courses',
+        element: <CoursePage/>
+      }
     ],
   },
 
