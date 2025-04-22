@@ -1,4 +1,4 @@
-import { CourseStatus, PaymentEnum, UserGender, UserRole } from "../enum";
+import { CourseStatus, GroupStatus, PaymentEnum, UserGender, UserRole } from "../enum";
 
 // login
 export interface LoginT {
@@ -136,10 +136,8 @@ export interface StudentFieldType {
   full_name: string;
   img_url: string;
   groupId: string;
-  gender: UserGender
+  gender: UserGender;
 }
-
-
 
 // group get
 
@@ -162,7 +160,7 @@ export interface Group {
   description: string;
   course_id: string;
   teacher_id: string;
-  status: string;
+  status: GroupStatus;
   created_at: string;
   updated_at: string;
   course: Course;
@@ -185,10 +183,10 @@ export interface User {
   full_name: string;
   username: string;
   password: string;
-  role: "TEACHER" | "STUDENT";
+  role: UserRole;
   address: string;
   phone_number: string;
-  gender: "MALE" | "FEMALE";
+  gender: UserGender;
   data_of_birth: string;
   created_at: string;
   updated_at: string;
@@ -203,23 +201,19 @@ export interface GroupMember {
   user: User;
 }
 
-
 // dashboard
 export interface DashboardT {
   fullname?: string | undefined;
   category?: string | undefined;
 }
 
-// course create form 
+// course create form
 export interface CourseTypeForm {
   name: string;
   description: string;
   duration: number;
   status: CourseStatus;
-
 }
-
-
 
 // axios error
 interface ValidationErrorResponse {
@@ -245,7 +239,6 @@ export interface AxiosErrorResponse {
 }
 // course request
 
-
 export interface CourseResponse {
   data: Course[];
   meta: {
@@ -254,4 +247,88 @@ export interface CourseResponse {
     limit: number;
     total: number;
   };
+}
+
+// teacher response
+
+export interface TeacherT {
+  user_id: string;
+  full_name: string;
+  username: string;
+  password: string;
+  role: UserRole;
+  address: string;
+  phone_number: string;
+  gender: UserGender;
+  data_of_birth: string;
+  created_at: string;
+  updated_at: string;
+  images: ImageT[];
+}
+
+export interface TeacherResponse {
+  status: number;
+  message: string;
+  data: TeacherT[];
+  meta: {
+    teacherCount: number;
+  };
+}
+
+export interface TeacherFieldType {
+  data_of_birth: string | Date;
+  phone_number: string;
+  address: string;
+  password: string;
+  username: string;
+  full_name: string;
+  img_url: string;
+  gender: UserGender;
+}
+
+
+// group response
+
+
+
+// === GroupMember ===
+export interface GroupMember {
+  group_members_id: string;
+  group_id: string;
+  user_id: string;
+  created_at: string;
+  updated_at: string;
+  user: User;
+}
+
+
+
+// === Group ===
+export interface Group {
+  group_id: string;
+  name: string;
+  description: string;
+  course_id: string;
+  teacher_id: string;
+  status: GroupStatus;
+  created_at: string;
+  updated_at: string;
+  course: Course;
+  teacher: User;
+  group_members: GroupMember[];
+}
+
+// === Meta ===
+export interface Meta {
+  totalCount: number;
+  page: number;
+  limit: number;
+}
+
+// === ApiResponse ===
+export interface GroupApiResponse {
+  status: number;
+  message: string;
+  data: Group[];
+  meta: Meta;
 }

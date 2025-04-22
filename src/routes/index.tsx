@@ -9,6 +9,9 @@ import { StudentPage } from "../module/admin/pages/student-page";
 import { StudentCreate } from "../module/admin/pages/student-create";
 import { CoursePage } from "../module/admin/pages/course-page";
 import { CourseCreatePage } from "../module/admin/pages/course-create-page";
+import { TeacherPage } from "../module/admin/pages/teacher-page";
+import { TeacherCreate } from "../module/admin/pages/teacher-create";
+import { GroupPage } from "../module/admin/pages/group-page";
 
 interface RouteT {
   path?: string;
@@ -59,6 +62,18 @@ export const routes: RouteT[] = [
       },{
         path: '/admin/course-create',
         element: <CourseCreatePage />
+      },
+      {
+        path: '/admin/teachers',
+        element: <TeacherPage />
+      },
+      {
+        path: '/admin/teacher-create',
+        element: <TeacherCreate />
+      },
+      {
+        path: '/admin/groups',
+        element: <GroupPage />
       }
     ],
   },

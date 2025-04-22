@@ -6,6 +6,7 @@ import { CourseStatus } from "../../../common/enum";
 import { useState } from "react";
 import { Button, notification, Typography } from "antd";
 import { useDeleteCourse } from "../service/mutation/use-delete-course";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const CourseCard = ({ item, i }: { item: Course; i: number }) => {
   const [isSure, setIsSure] = useState<boolean>(false);
@@ -13,11 +14,21 @@ export const CourseCard = ({ item, i }: { item: Course; i: number }) => {
 
   const { mutate } = useDeleteCourse();
 
+  const queryClient = useQueryClient();
+
   const deleteStudentFn = () => {
     mutate(item.course_id, {
       onSettled() {
         api.success({
           message: "Muvaffaqiyat o'chirildi",
+        });
+        queryClient.refetchQueries({
+          queryKey: ["course_list"],
+        });
+      },
+      onError: (err) => {
+        api.error({
+          message: err.message,
         });
       },
     });

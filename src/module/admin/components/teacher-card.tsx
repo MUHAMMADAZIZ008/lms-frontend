@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { DeleteIcon } from "../../../assets/components/delete-icon";
 import { EditIcon } from "../../../assets/components/edit-icon";
-import { Student } from "../../../common/interface";
+import { TeacherT } from "../../../common/interface";
 import { Button, Image, notification, Typography } from "antd";
 import { useDeleteStudent } from "../service/mutation/use-delete-student";
 import { useQueryClient } from "@tanstack/react-query";
 
-const StudentCard = ({ item, i }: { item: Student; i: number }) => {
+const TeacherCard = ({ item, i }: { item: TeacherT; i: number }) => {
   const [api, contextHolderNot] = notification.useNotification();
 
   const [isSure, setIsSure] = useState<boolean>(false);
@@ -19,7 +19,7 @@ const StudentCard = ({ item, i }: { item: Student; i: number }) => {
       onSuccess(data) {
         console.log(data);
         queryClient.refetchQueries({
-          queryKey: ["allStudent"],
+          queryKey: ["teacher_list"],
         });
       },
       onError: (err) => {
@@ -68,7 +68,7 @@ const StudentCard = ({ item, i }: { item: Student; i: number }) => {
         <p>{item.address}</p>
       </li>
       <li>
-        <p>{item.group_members[0]?.group.name}</p>
+        <p>{item.username}</p>
       </li>
 
       {isSure ? (
@@ -97,4 +97,4 @@ const StudentCard = ({ item, i }: { item: Student; i: number }) => {
   );
 };
 
-export default StudentCard;
+export default TeacherCard;

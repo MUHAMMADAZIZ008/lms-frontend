@@ -25,3 +25,9 @@ export enum CourseStatus {
   INACTIVE = "INACTIVE",
   DRAFT = "DRAFT",
 }
+
+export enum GroupStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  COMPLETED = 'COMPLETED',
+}
