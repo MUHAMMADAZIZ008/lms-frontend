@@ -8,6 +8,7 @@ import { RouteSlash } from "../components/route-slash";
 import { StudentPage } from "../module/admin/pages/student-page";
 import { StudentCreate } from "../module/admin/pages/student-create";
 import { CoursePage } from "../module/admin/pages/course-page";
+import { CourseCreatePage } from "../module/admin/pages/course-create-page";
 
 interface RouteT {
   path?: string;
@@ -55,6 +56,9 @@ export const routes: RouteT[] = [
       {
         path: '/admin/courses',
         element: <CoursePage/>
+      },{
+        path: '/admin/course-create',
+        element: <CourseCreatePage />
       }
     ],
   },

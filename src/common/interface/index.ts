@@ -1,4 +1,4 @@
-import { PaymentEnum, UserGender, UserRole } from "../enum";
+import { CourseStatus, PaymentEnum, UserGender, UserRole } from "../enum";
 
 // login
 export interface LoginT {
@@ -208,4 +208,50 @@ export interface GroupMember {
 export interface DashboardT {
   fullname?: string | undefined;
   category?: string | undefined;
+}
+
+// course create form 
+export interface CourseTypeForm {
+  name: string;
+  description: string;
+  duration: number;
+  status: CourseStatus;
+
+}
+
+
+
+// axios error
+interface ValidationErrorResponse {
+  statusCode: number; // 422
+  error: string; // "Unprocessable Entity"
+  message: string[]; // ['duration must not be less than 1', 'duration must be an integer number']
+}
+
+export interface AxiosErrorResponse {
+  message: string; // "Request failed with status code 422"
+  name: string; // "AxiosError"
+  code: string; // "ERR_BAD_REQUEST"
+  config: any;
+  request: XMLHttpRequest;
+  response: {
+    status: number; // 422
+    statusText: string; // "Unprocessable Entity"
+    headers: Record<string, string>;
+    config: any;
+    data: ValidationErrorResponse;
+  };
+  stack?: string;
+}
+// course request
+
+
+export interface CourseResponse {
+  data: Course[];
+  meta: {
+    page: number;
+    pages: number;
+    limit: number;
+    total: number;
+  };
 }

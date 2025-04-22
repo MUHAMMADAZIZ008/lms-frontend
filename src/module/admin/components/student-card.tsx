@@ -2,23 +2,37 @@ import { useState } from "react";
 import { DeleteIcon } from "../../../assets/components/delete-icon";
 import { EditIcon } from "../../../assets/components/edit-icon";
 import { Student } from "../../../common/interface";
-import { Button, Image, Typography } from "antd";
+import { Button, Image, notification, Typography } from "antd";
 import { useDeleteStudent } from "../service/mutation/use-delete-student";
+import { useQueryClient } from "@tanstack/react-query";
 
 const StudentCard = ({ item, i }: { item: Student; i: number }) => {
+  const [api, contextHolderNot] = notification.useNotification();
+
   const [isSure, setIsSure] = useState<boolean>(false);
   const { mutate } = useDeleteStudent();
+
+  const queryClient = useQueryClient();
 
   const deleteStudentFn = () => {
     mutate(item.user_id, {
       onSuccess(data) {
         console.log(data);
+        queryClient.refetchQueries({
+          queryKey: ["course_list"],
+        });
+      },
+      onError: (err) => {
+        api.error({
+          message: err.message,
+        });
       },
     });
   };
 
   return (
     <ul className="student__content-card">
+      {contextHolderNot}
       <li>
         <p>{i + 1}</p>
       </li>
