@@ -4,6 +4,7 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #ddd;
+    position: relative;
 }
 
 .group__header-title {
@@ -57,7 +58,7 @@
     grid-template-columns: 0.5fr repeat(10, 1fr);
 }
 
-.group__content-card li:nth-child(1) > p {
+.group__content-card li:nth-child(1)>p {
     font-size: 18px;
     font-weight: 600;
 }
@@ -66,7 +67,7 @@
     grid-column: span 2;
 }
 
-.group__content-card li:nth-child(2) > p {
+.group__content-card li:nth-child(2)>p {
     font-size: 18px;
     font-weight: 600;
 }
@@ -80,12 +81,12 @@
 }
 
 
-.group__content-card li:nth-child(4) > p {
+.group__content-card li:nth-child(4)>p {
     font-size: 18px;
 }
 
 
-.group__content-card li:nth-child(5) > p {
+.group__content-card li:nth-child(5)>p {
     text-align: center;
     font-size: 18px;
     font-weight: 600;
@@ -95,17 +96,18 @@
     text-align: center;
 }
 
-.group__content-card li:nth-child(6) > p {
+.group__content-card li:nth-child(6)>p {
     font-weight: 600;
     font-size: 18px;
 }
 
 
-.group__content-card li:nth-child(7){
+.group__content-card li:nth-child(7) {
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
 .group__content-card li:nth-child(7)>button {
     padding: 0;
     width: 36px;
@@ -134,10 +136,69 @@
 
 .group__content-list-box {
     padding: 40px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
+
 
 .create__header-button-wrap {
     display: flex;
     align-items: center;
     gap: 15px;
+}
+
+.group__header-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* modal */
+
+.group__filter-modal {
+    width: 200px;
+    border-radius: 4px;
+    background-color: #fff;
+    position: absolute;
+    right: 20px;
+    top: 100%;
+    box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.1);
+    
+}
+
+.group__modal-header {
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+}
+
+.group__modal-title {
+    font-weight: 600;
+    font-size: 26px;
+}
+
+.group__modal-content {
+    padding: 15px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+    gap: 10px;
+}
+
+.group__modal-content-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+.group__modal-btn {
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    border: none;
 }

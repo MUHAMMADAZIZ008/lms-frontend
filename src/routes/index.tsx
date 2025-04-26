@@ -12,6 +12,7 @@ import { CourseCreatePage } from "../module/admin/pages/course-create-page";
 import { TeacherPage } from "../module/admin/pages/teacher-page";
 import { TeacherCreate } from "../module/admin/pages/teacher-create";
 import { GroupPage } from "../module/admin/pages/group-page";
+import { GroupCreatePage } from "../module/admin/pages/group-create-page";
 
 interface RouteT {
   path?: string;
@@ -74,6 +75,10 @@ export const routes: RouteT[] = [
       {
         path: '/admin/groups',
         element: <GroupPage />
+      },
+      {
+        path: '/admin/group-create',
+        element: <GroupCreatePage />
       }
     ],
   },

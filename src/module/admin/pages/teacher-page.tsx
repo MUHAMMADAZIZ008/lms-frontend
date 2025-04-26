@@ -1,13 +1,17 @@
-import { Button, Select } from "antd";
+import { Button, DatePicker, DatePickerProps, Select } from "antd";
 import { PlusIcon } from "../../../assets/components/plus-icon";
 import "../css/student-page.css";
 import { useEffect, useState } from "react";
 import { PaginationLeftIcon } from "../../../assets/components/pagination-left-icon";
 import { PaginationRightIcon } from "../../../assets/components/pagination-right-icon";
-import { PaginationT } from "../../../common/interface";
+import { filterOptionForTeacher, PaginationT } from "../../../common/interface";
 import { useNavigate } from "react-router-dom";
 import { useGetAllTeacher } from "../service/query/use-get-all-teacher";
 import TeacherCard from "../components/teacher-card";
+import { FilterIcon } from "../../../assets/components/filter-icon";
+import { UserGender } from "../../../common/enum";
+import { CloseIcon } from "../../../assets/components/close-icon";
+import { SaveIcon } from "../../../assets/components/save-icon";
 
 export const TeacherPage = () => {
   const navigate = useNavigate();
@@ -15,6 +19,8 @@ export const TeacherPage = () => {
     limit: 6,
     page: 1,
   });
+  const [filterOption, setFilterOption] = useState<filterOptionForTeacher>({});
+
   const [paginationButtonCount, setPaginationButtonCount] = useState<number>(1);
   const [selectionOption, setSelectionOption] = useState<
     { value: number; label: number }[]
@@ -24,7 +30,7 @@ export const TeacherPage = () => {
       label: 1,
     },
   ]);
-  const { data, isLoading } = useGetAllTeacher(paginationData);
+  const { data, isLoading } = useGetAllTeacher(paginationData, filterOption);
 
   useEffect(() => {
     const buttonCount = Math.ceil(
@@ -61,6 +67,50 @@ export const TeacherPage = () => {
     navigate("/admin/teacher-create");
   };
 
+  // modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const handleSave = () => {
+    setFilterOption((state) => ({ ...state, isSaved: true }));
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const filterDateFn: DatePickerProps["onChange"] = (_, dateString) => {
+    if (typeof dateString == "string") {
+      setFilterOption((state) => ({ ...state, date_of_birth: dateString }));
+    }
+  };
+
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        if (isModalOpen) {
+          setIsModalOpen(false);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleEsc);
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [isModalOpen]);
+
+  const handleGenderFn = (value: UserGender) => {
+    if (value) {
+      setFilterOption((state) => ({ ...state, gender: value }));
+    }
+  };
+
   return (
     <section className="student-page">
       <div className="student__header">
@@ -73,68 +123,114 @@ export const TeacherPage = () => {
           >
             Qo’shish
           </Button>
+          <Button onClick={showModal}>
+            <FilterIcon />
+          </Button>
+        </div>
+
+        <div
+          style={isModalOpen ? { opacity: 1 } : { opacity: 0 }}
+          className="student__filter-modal"
+        >
+          <div className="student__modal-header">
+            <p className="student__modal-title">Filtr</p>
+            <button onClick={handleCancel} className="student__modal-btn">
+              <CloseIcon />
+            </button>
+          </div>
+          <div className="student__modal-content">
+            <div className="student__modal-content-wrap">
+              <DatePicker onChange={filterDateFn} />
+              <Select
+                onChange={handleGenderFn}
+                style={{ width: "100%" }}
+                placeholder="Jinsi"
+              >
+                <Select.Option value={undefined}>Hammasi</Select.Option>
+                <Select.Option value={UserGender.MALE}>
+                  O'g'il bola
+                </Select.Option>
+                <Select.Option value={UserGender.FEMALE}>
+                  Qiz bola
+                </Select.Option>
+              </Select>
+            </div>
+            <Button onClick={handleSave} icon={<SaveIcon />}>
+              Saqlash
+            </Button>
+          </div>
         </div>
       </div>
-      <div className="student__content-box">
-        <div className="student__content_title-box">
-          <p>#</p>
-          <p>Bolalar F.I.O</p>
-          <p>Tug’ilgan sana</p>
-          <p>Jinsi</p>
-          <p>Telfon raqami</p>
-          <p>Uy manzili</p>
-          <p>Usernname</p>
-          <p>Imkonyatlar</p>
+      <div
+        style={{
+          flexGrow: 1,
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
+        <div className="student__content-box">
+          <div className="student__content_title-box">
+            <p>#</p>
+            <p>Bolalar F.I.O</p>
+            <p>Tug’ilgan sana</p>
+            <p>Jinsi</p>
+            <p>Telfon raqami</p>
+            <p>Uy manzili</p>
+            <p>Usernname</p>
+            <p>Imkonyatlar</p>
+          </div>
+          <div className="student__content-list-box">
+            {isLoading ? (
+              <h2>Loading...</h2>
+            ) : (
+              data &&
+              data?.data.map((item, i) => (
+                <TeacherCard key={item.user_id} item={item} i={i} />
+              ))
+            )}
+          </div>
         </div>
-        <div className="student__content-list-box">
-          {isLoading ? (
-            <h2>Loading...</h2>
-          ) : (
-            data &&
-            data?.data.map((item, i) => (
-              <TeacherCard key={item.user_id} item={item} i={i} />
-            ))
-          )}
-        </div>
-      </div>
-      <div className="student__pagination-box">
-        <p className="student__pagination-text">Sahifalar</p>
-        <div className="student__pagination_button-wrap">
-          <Button
-            icon={<PaginationLeftIcon />}
-            disabled={paginationData.page <= 1 ? true : false}
-            onClick={() =>
+        <div className="student__pagination-box">
+          <p className="student__pagination-text">Sahifalar</p>
+          <div className="student__pagination_button-wrap">
+            <Button
+              icon={<PaginationLeftIcon />}
+              disabled={paginationData.page <= 1 ? true : false}
+              onClick={() =>
+                setPaginationData((prev) => ({
+                  ...prev,
+                  page: Math.max(prev.page - 1, 1),
+                }))
+              }
+            />
+            <p>{paginationData.page}</p>
+            <Button
+              disabled={
+                paginationData.page >= paginationButtonCount ? true : false
+              }
+              icon={<PaginationRightIcon />}
+              onClick={() =>
+                setPaginationData((prev) => ({
+                  ...prev,
+                  page: Math.min(prev.page + 1, paginationButtonCount),
+                }))
+              }
+            />
+          </div>
+          <Select
+            value={paginationData.limit}
+            options={selectionOption}
+            style={{ width: 80 }}
+            onChange={(value) =>
               setPaginationData((prev) => ({
                 ...prev,
-                page: Math.max(prev.page - 1, 1),
+                limit: value,
               }))
             }
           />
-          <p>{paginationData.page}</p>
-          <Button
-            disabled={
-              paginationData.page >= paginationButtonCount ? true : false
-            }
-            icon={<PaginationRightIcon />}
-            onClick={() =>
-              setPaginationData((prev) => ({
-                ...prev,
-                page: Math.min(prev.page + 1, paginationButtonCount),
-              }))
-            }
-          />
         </div>
-        <Select
-          value={paginationData.limit}
-          options={selectionOption}
-          style={{ width: 80 }}
-          onChange={(value) =>
-            setPaginationData((prev) => ({
-              ...prev,
-              limit: value,
-            }))
-          }
-        />
       </div>
     </section>
   );

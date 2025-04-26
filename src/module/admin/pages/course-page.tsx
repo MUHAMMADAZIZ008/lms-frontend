@@ -1,13 +1,17 @@
-import { Button, Empty, Select } from "antd";
+import { Button, DatePickerProps, Empty, Select } from "antd";
 import { PlusIcon } from "../../../assets/components/plus-icon";
 import "../css/course-page.css";
 import { useNavigate } from "react-router-dom";
 import { useGetAllCourse } from "../service/query/use-get-all-course";
 import { CourseCard } from "../components/course-card";
 import { useEffect, useState } from "react";
-import { PaginationT } from "../../../common/interface";
+import { filterOptionForCourse, PaginationT } from "../../../common/interface";
 import { PaginationLeftIcon } from "../../../assets/components/pagination-left-icon";
 import { PaginationRightIcon } from "../../../assets/components/pagination-right-icon";
+import { FilterIcon } from "../../../assets/components/filter-icon";
+import { CourseStatus } from "../../../common/enum";
+import { CloseIcon } from "../../../assets/components/close-icon";
+import { SaveIcon } from "../../../assets/components/save-icon";
 
 export const CoursePage = () => {
   const [paginationData, setPaginationData] = useState<PaginationT>({
@@ -23,6 +27,9 @@ export const CoursePage = () => {
       label: 1,
     },
   ]);
+
+  const [filterOption, setFilterOption] = useState<filterOptionForCourse>({});
+
   const { data, isLoading } = useGetAllCourse(paginationData);
 
   useEffect(() => {
@@ -61,6 +68,50 @@ export const CoursePage = () => {
     navigate("/admin/course-create");
   };
 
+  // modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const handleSave = () => {
+    setFilterOption((state) => ({ ...state, isSaved: true }));
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const filterDateFn: DatePickerProps["onChange"] = (_, dateString) => {
+    if (typeof dateString == "string") {
+      setFilterOption((state) => ({ ...state, start_date: dateString }));
+    }
+  };
+
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        if (isModalOpen) {
+          setIsModalOpen(false);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleEsc);
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [isModalOpen]);
+
+  const handleStatusFn = (value: CourseStatus) => {
+    if (value) {
+      setFilterOption((state) => ({ ...state, status: value }));
+    }
+  };
+
   return (
     <section className="course">
       <div className="course__header">
@@ -73,6 +124,44 @@ export const CoursePage = () => {
           >
             Qo’shish
           </Button>
+          <Button onClick={showModal}>
+            <FilterIcon />
+          </Button>
+        </div>
+
+        <div
+          style={isModalOpen ? { opacity: 1 } : { opacity: 0 }}
+          className="course__filter-modal"
+        >
+          <div className="course__modal-header">
+            <p className="course__modal-title">Filtr</p>
+            <button onClick={handleCancel} className="course__modal-btn">
+              <CloseIcon />
+            </button>
+          </div>
+          <div className="course__modal-content">
+            <div className="course__modal-content-wrap">
+              <Select
+                onChange={handleStatusFn}
+                style={{ width: "100%" }}
+                placeholder="Holati"
+              >
+                <Select.Option value={undefined}>Hammasi</Select.Option>
+                <Select.Option value={CourseStatus.ACTIVE}>
+                  Aktive
+                </Select.Option>
+                <Select.Option value={CourseStatus.INACTIVE}>
+                  Aktive emas
+                </Select.Option>
+                <Select.Option value={CourseStatus.DRAFT}>
+                  To'htatilgan
+                </Select.Option>
+              </Select>
+            </div>
+            <Button onClick={handleSave} icon={<SaveIcon />}>
+              Saqlash
+            </Button>
+          </div>
         </div>
       </div>
       <div className="course__content">

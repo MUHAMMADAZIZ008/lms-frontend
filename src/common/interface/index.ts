@@ -1,4 +1,10 @@
-import { CourseStatus, GroupStatus, PaymentEnum, UserGender, UserRole } from "../enum";
+import {
+  CourseStatus,
+  GroupStatus,
+  PaymentEnum,
+  UserGender,
+  UserRole,
+} from "../enum";
 
 // login
 export interface LoginT {
@@ -286,10 +292,7 @@ export interface TeacherFieldType {
   gender: UserGender;
 }
 
-
 // group response
-
-
 
 // === GroupMember ===
 export interface GroupMember {
@@ -300,8 +303,6 @@ export interface GroupMember {
   updated_at: string;
   user: User;
 }
-
-
 
 // === Group ===
 export interface Group {
@@ -332,3 +333,42 @@ export interface GroupApiResponse {
   data: Group[];
   meta: Meta;
 }
+
+// group create form type
+export interface GroupTypeForm {
+  name: string;
+  description: string;
+  status: GroupStatus;
+  teacher_id: string;
+  course_id: string;
+  start_date: string;
+}
+
+export interface SelectOptionT {
+  value: string;
+  label: string;
+}
+
+export interface filterOptionForStudent {
+  date_of_birth?: string;
+  gender?: UserGender;
+  group_id?: string;
+  isSaved?: boolean;
+}
+export interface filterOptionForTeacher {
+  date_of_birth?: string;
+  gender?: UserGender;
+  isSaved?: boolean;
+}
+
+export interface filterOptionForGroup {
+  start_date?: string;
+  status?: GroupStatus;
+  isSaved?: boolean;
+}
+
+
+export interface filterOptionForCourse {
+  status?: CourseStatus;
+}
+

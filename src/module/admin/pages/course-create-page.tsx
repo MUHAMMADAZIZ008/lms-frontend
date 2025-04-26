@@ -5,10 +5,12 @@ import "../css/course-create.css";
 import { CourseTypeForm } from "../../../common/interface";
 import { CourseStatus } from "../../../common/enum";
 import { useCreateCourse } from "../service/mutation/use-create-course";
+import { PaginationLeftIcon } from "../../../assets/components/pagination-left-icon";
+import { useNavigate } from "react-router-dom";
 
 export const CourseCreatePage = () => {
   const [api, contextHolderNot] = notification.useNotification();
-
+  const navigate = useNavigate();
   const { mutate } = useCreateCourse();
 
   const [form] = Form.useForm();
@@ -37,6 +39,9 @@ export const CourseCreatePage = () => {
     form.resetFields();
   };
 
+  const goBackFn = () => {
+    navigate(-1);
+  };
   return (
     <section className="course__crate">
       {contextHolderNot}
@@ -44,6 +49,15 @@ export const CourseCreatePage = () => {
         <div className="course_create-header">
           <h2 className="course__create-title">Kurs yaratish</h2>
           <div className="course__create-header-wrap">
+            <Form.Item label={null}>
+              <Button
+                onClick={goBackFn}
+                icon={<PaginationLeftIcon />}
+                type="default"
+              >
+                Ortga qaytish
+              </Button>
+            </Form.Item>
             <Form.Item label={null}>
               <Button onClick={onCancel} icon={<CancelIcon />} type="default">
                 Bekor qilish
@@ -63,7 +77,7 @@ export const CourseCreatePage = () => {
         <div className="course__crete-inputs">
           <Form.Item<CourseTypeForm>
             className="course__input"
-            label="Guruh nomi"
+            label="Kurs nomi"
             name="name"
             rules={[{ required: true, message: "Nomini kiriting!" }]}
           >
@@ -71,7 +85,7 @@ export const CourseCreatePage = () => {
           </Form.Item>
           <Form.Item<CourseTypeForm>
             className="course__input"
-            label="Guruh uchun tafsif"
+            label="Kurs uchun tafsif"
             name="description"
             rules={[{ required: true, message: "Tafsifni kiriting!" }]}
           >
@@ -80,7 +94,7 @@ export const CourseCreatePage = () => {
 
           <Form.Item<CourseTypeForm>
             className="course__input"
-            label="Guruh davomligi"
+            label="Kurs davomligi"
             name="duration"
             rules={[{ required: true, message: "Davomligini kiriting!" }]}
           >
@@ -89,7 +103,7 @@ export const CourseCreatePage = () => {
 
           <Form.Item<CourseTypeForm>
             className="course__input"
-            label="Guruh holati"
+            label="Kurs holati"
             name="status"
             rules={[{ required: true, message: "Holatni tanlang!" }]}
           >

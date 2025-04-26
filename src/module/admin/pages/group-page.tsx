@@ -1,13 +1,17 @@
-import { Button, Select } from "antd";
+import { Button, DatePicker, DatePickerProps, Select } from "antd";
 import { PlusIcon } from "../../../assets/components/plus-icon";
 import "../css/group-page.css";
 import { useGeAllGroup } from "../service/query/use-get-all-group";
 import { PaginationLeftIcon } from "../../../assets/components/pagination-left-icon";
 import { useNavigate } from "react-router-dom";
-import { PaginationT } from "../../../common/interface";
+import { filterOptionForGroup, PaginationT } from "../../../common/interface";
 import { useEffect, useState } from "react";
 import { PaginationRightIcon } from "../../../assets/components/pagination-right-icon";
 import { GroupCard } from "../components/group-card";
+import { FilterIcon } from "../../../assets/components/filter-icon";
+import { CloseIcon } from "../../../assets/components/close-icon";
+import { SaveIcon } from "../../../assets/components/save-icon";
+import { GroupStatus } from "../../../common/enum";
 
 export const GroupPage = () => {
   const navigate = useNavigate();
@@ -15,6 +19,8 @@ export const GroupPage = () => {
     limit: 6,
     page: 1,
   });
+  const [filterOption, setFilterOption] = useState<filterOptionForGroup>({});
+
   const [paginationButtonCount, setPaginationButtonCount] = useState<number>(1);
   const [selectionOption, setSelectionOption] = useState<
     { value: number; label: number }[]
@@ -36,11 +42,7 @@ export const GroupPage = () => {
   }, [data, paginationData]);
 
   useEffect(() => {
-    // let buttonCount = 1;
-    // while (buttonCount <= paginationButtonCount) {
-    //   selectOption.push({ value: buttonCount, label: buttonCount });
-    //   buttonCount++;
-    // }
+
     const selectOption = [
       {
         value: 6,
@@ -63,14 +65,107 @@ export const GroupPage = () => {
     setSelectionOption(selectOption);
   }, []);
 
+  const createGroupNavigate = () => {
+    navigate("/admin/group-create");
+  };
+
+  // modal
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const handleSave = () => {
+    setFilterOption((state) => ({ ...state, isSaved: true }));
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const filterDateFn: DatePickerProps["onChange"] = (_, dateString) => {
+    if (typeof dateString == "string") {
+      setFilterOption((state) => ({ ...state, start_date: dateString }));
+    }
+  };
+
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        if (isModalOpen) {
+          setIsModalOpen(false);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleEsc);
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [isModalOpen]);
+
+  const handleStatusFn = (value: GroupStatus) => {
+    if (value) {
+      setFilterOption((state) => ({ ...state, status: value }));
+    }
+  };
+
   return (
     <section className="group__page">
       <div className="group__header">
         <h2 className="group__header-title">Guruhlar</h2>
         <div className="group__header-wrap">
-          <Button style={{ padding: "10px 20px" }} icon={<PlusIcon />}>
+          <Button
+            onClick={createGroupNavigate}
+            style={{ padding: "10px 20px" }}
+            icon={<PlusIcon />}
+          >
             Qo’shish
           </Button>
+          <Button onClick={showModal}>
+            <FilterIcon />
+          </Button>
+        </div>
+
+        <div
+          style={isModalOpen ? { opacity: 1 } : { opacity: 0 }}
+          className="group__filter-modal"
+        >
+          <div className="group__modal-header">
+            <p className="group__modal-title">Filtr</p>
+            <button onClick={handleCancel} className="group__modal-btn">
+              <CloseIcon />
+            </button>
+          </div>
+          <div className="group__modal-content">
+            <div className="group__modal-content-wrap">
+              <DatePicker
+                onChange={filterDateFn}
+                placeholder="Yaratilgan vaqti"
+              />
+              <Select
+                onChange={handleStatusFn}
+                style={{ width: "100%" }}
+                placeholder="Holati"
+              >
+                <Select.Option value={undefined}>Hammasi</Select.Option>
+                <Select.Option value={GroupStatus.ACTIVE}>Aktive</Select.Option>
+                <Select.Option value={GroupStatus.INACTIVE}>
+                  Aktive emas
+                </Select.Option>
+                <Select.Option value={GroupStatus.COMPLETED}>
+                  To'htatilgan
+                </Select.Option>
+              </Select>
+            </div>
+            <Button onClick={handleSave} icon={<SaveIcon />}>
+              Saqlash
+            </Button>
+          </div>
         </div>
       </div>
       <div className="group__content">
@@ -87,7 +182,9 @@ export const GroupPage = () => {
           {isLoading ? (
             <h1>Loading...</h1>
           ) : (
-            data?.data.map((item, i) => <GroupCard item={item} i={i} />)
+            data?.data.map((item, i) => (
+              <GroupCard key={item.group_id} item={item} i={i} />
+            ))
           )}
         </div>
 

@@ -22,11 +22,13 @@ import { useStudentUpload } from "../service/mutation/use-student-upload";
 import { useGeAllGroup } from "../service/query/use-get-all-group";
 import { PaymentEnum, UserGender } from "../../../common/enum";
 import { useCreateStudent } from "../service/mutation/use-create-student";
+import { PaginationLeftIcon } from "../../../assets/components/pagination-left-icon";
+import { useNavigate } from "react-router-dom";
 
 export const StudentCreate = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [api, contextHolderNot] = notification.useNotification();
-
+  const navigate = useNavigate()
   const [imageUrl, setImageUrl] = useState<string>();
 
   const [dateOfBirth, setDateOfBirth] = useState<string>();
@@ -79,6 +81,8 @@ export const StudentCreate = () => {
 
   const onCancel = () => {
     form.resetFields();
+    setFileList([]);
+    setImageUrl("");
   };
 
   const { mutate } = useStudentUpload();
@@ -140,6 +144,9 @@ export const StudentCreate = () => {
     setGroupSelectOption(option);
   }, [data]);
 
+  const goBackFn = () => {
+    navigate(-1);
+  };
   return (
     <section className="student_create">
       {contextHolder}
@@ -148,6 +155,15 @@ export const StudentCreate = () => {
         <div className="student-create__header">
           <h2 className="create__header-title">O’quvchilarni qo’shish</h2>
           <div className="create__header-button-wrap">
+            <Form.Item label={null}>
+              <Button
+                onClick={goBackFn}
+                icon={<PaginationLeftIcon />}
+                type="default"
+              >
+                Ortga qaytish
+              </Button>
+            </Form.Item>
             <Form.Item label={null}>
               <Button onClick={onCancel} icon={<CancelIcon />} type="default">
                 Bekor qilish
@@ -255,7 +271,7 @@ export const StudentCreate = () => {
             rules={[{ required: true, message: "Guruhni tanlang!" }]}
           >
             <Select
-              // defaultValue={groupSelectOption && groupSelectOption[0].label}
+            // defaultValue={groupSelectOption && groupSelectOption[0].label}
             >
               {groupSelectOption?.map((item) => (
                 <Select.Option key={item.value} value={item.value}>

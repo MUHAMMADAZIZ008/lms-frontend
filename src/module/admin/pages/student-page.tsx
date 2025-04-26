@@ -1,16 +1,32 @@
-import { Button, Select } from "antd";
+import {
+  Button,
+  DatePicker,
+  DatePickerProps,
+  Modal,
+  notification,
+  Select,
+  Spin,
+} from "antd";
 import { PlusIcon } from "../../../assets/components/plus-icon";
 import "../css/student-page.css";
 import { useGetAllStudent } from "../service/query/use-get-all-student";
 import { useEffect, useState } from "react";
 import { PaginationLeftIcon } from "../../../assets/components/pagination-left-icon";
 import { PaginationRightIcon } from "../../../assets/components/pagination-right-icon";
-import { PaginationT } from "../../../common/interface";
+import { filterOptionForStudent, PaginationT } from "../../../common/interface";
 import StudentCard from "../components/student-card";
 import { useNavigate } from "react-router-dom";
+import { FilterIcon } from "../../../assets/components/filter-icon";
+import { CloseIcon } from "../../../assets/components/close-icon";
+import { UserGender } from "../../../common/enum";
+import { useGeAllGroup } from "../service/query/use-get-all-group";
+import { SaveIcon } from "../../../assets/components/save-icon";
 
 export const StudentPage = () => {
   const navigate = useNavigate();
+  const [api, contextHolderNot] = notification.useNotification();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filterOption, setFilterOption] = useState<filterOptionForStudent>({});
   const [paginationData, setPaginationData] = useState<PaginationT>({
     limit: 6,
     page: 1,
@@ -24,7 +40,31 @@ export const StudentPage = () => {
       label: 1,
     },
   ]);
-  const { data, isLoading } = useGetAllStudent(paginationData);
+  const { data, isLoading } = useGetAllStudent(paginationData, filterOption);
+
+  const [groupSelectOption, setGroupSelectOption] = useState<
+    {
+      value: string;
+      label: string;
+    }[]
+  >();
+
+  const { data: groupData, isError, error } = useGeAllGroup();
+  if (isError) {
+    api.error({
+      message: error.message,
+    });
+  }
+
+  useEffect(() => {
+    const option = groupData?.data.map((item) => {
+      return {
+        value: item.group_id,
+        label: item.name,
+      };
+    });
+    setGroupSelectOption(option);
+  }, [groupData]);
 
   useEffect(() => {
     const buttonCount = Math.ceil(
@@ -66,8 +106,55 @@ export const StudentPage = () => {
     navigate("/admin/student-create");
   };
 
+  // modal
+  const showModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const handleSave = () => {
+    setFilterOption((state) => ({ ...state, isSaved: true }));
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const filterDateFn: DatePickerProps["onChange"] = (_, dateString) => {
+    if (typeof dateString == "string") {
+      setFilterOption((state) => ({ ...state, date_of_birth: dateString }));
+    }
+  };
+
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        if (isModalOpen) {
+          setIsModalOpen(false);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleEsc);
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [isModalOpen]);
+
+  const handleGenderFn = (value: UserGender) => {
+    if (value) {
+      setFilterOption((state) => ({ ...state, gender: value }));
+    }
+  };
+  const handleGroupFn = (value: string) => {
+    if (value) {
+      setFilterOption((state) => ({ ...state, group_id: value }));
+    }
+  };
   return (
     <section className="student-page">
+      {contextHolderNot}
       <div className="student__header">
         <h2 className="student__header-title">O’quvchilar jadvali</h2>
         <div className="student__header-wrap">
@@ -78,6 +165,53 @@ export const StudentPage = () => {
           >
             Qo’shish
           </Button>
+          <Button onClick={showModal}>
+            <FilterIcon />
+          </Button>
+        </div>
+        <div
+          style={isModalOpen ? { opacity: 1 } : { opacity: 0 }}
+          className="student__filter-modal"
+        >
+          <div className="student__modal-header">
+            <p className="student__modal-title">Filtr</p>
+            <button onClick={handleCancel} className="student__modal-btn">
+              <CloseIcon />
+            </button>
+          </div>
+          <div className="student__modal-content">
+            <div className="student__modal-content-wrap">
+              <DatePicker onChange={filterDateFn} />
+              <Select
+                onChange={handleGenderFn}
+                style={{ width: "100%" }}
+                placeholder="Jinsi"
+              >
+                <Select.Option value={undefined}>Hammasi</Select.Option>
+                <Select.Option value={UserGender.MALE}>
+                  O'g'il bola
+                </Select.Option>
+                <Select.Option value={UserGender.FEMALE}>
+                  Qiz bola
+                </Select.Option>
+              </Select>
+              <Select
+                onChange={handleGroupFn}
+                style={{ width: "100%" }}
+                placeholder="Guruh nomi"
+              >
+                <Select.Option value={undefined}>Hammasi</Select.Option>
+                {groupSelectOption?.map((item) => (
+                  <Select.Option key={item.value} value={item.value}>
+                    {item.label}
+                  </Select.Option>
+                ))}
+              </Select>
+            </div>
+            <Button onClick={handleSave} icon={<SaveIcon />}>
+              Saqlash
+            </Button>
+          </div>
         </div>
       </div>
       <div className="student__content-box">
@@ -93,7 +227,7 @@ export const StudentPage = () => {
         </div>
         <div className="student__content-list-box">
           {isLoading ? (
-            <h2>Loading...</h2>
+            <Spin size="large" />
           ) : (
             data?.data.map((item, i) => (
               <StudentCard key={item.user_id} item={item} i={i} />

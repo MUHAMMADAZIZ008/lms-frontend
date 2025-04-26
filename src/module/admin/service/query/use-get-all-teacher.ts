@@ -1,16 +1,27 @@
 import { useQuery } from "@tanstack/react-query";
-import { PaginationT, TeacherResponse } from "../../../../common/interface";
+import {
+  filterOptionForTeacher,
+  PaginationT,
+  TeacherResponse,
+} from "../../../../common/interface";
 import { request } from "../../../../config";
 
-export const useGetAllTeacher = (pagination?: PaginationT) => {
+export const useGetAllTeacher = (
+  pagination?: PaginationT,
+  filterOption?: filterOptionForTeacher
+) => {
   return useQuery({
-    queryKey: ["teacher__list", pagination],
+    queryKey: ["teacher__list", pagination, filterOption],
     queryFn: () =>
-      request.get("/teacher", {
-        params: {
-          page: pagination?.page,
-          limit: pagination?.limit,
-        },
-      }).then((res) => res.data.data as TeacherResponse),
+      request
+        .get<TeacherResponse>("/teacher", {
+          params: {
+            page: pagination?.page,
+            limit: pagination?.limit,
+            gender: filterOption?.gender,
+            date_of_birth: filterOption?.date_of_birth,
+          },
+        })
+        .then((res) => res.data),
   });
 };

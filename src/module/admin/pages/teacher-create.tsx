@@ -17,19 +17,20 @@ import { StudentFieldType, TeacherFieldType } from "../../../common/interface";
 import { CancelIcon } from "../../../assets/components/cancel-icon";
 import { ConfirmationIcon } from "../../../assets/components/confirmation-icon";
 import "../css/student-create.css";
-import {  UserGender } from "../../../common/enum";
+import { UserGender } from "../../../common/enum";
 import { useTeacherStudent } from "../service/mutation/use-teacher-student";
 import { useTeacherUpload } from "../service/mutation/use-teacher-upload";
 import { useState } from "react";
+import { PaginationLeftIcon } from "../../../assets/components/pagination-left-icon";
+import { useNavigate } from "react-router-dom";
 
 export const TeacherCreate = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [api, contextHolderNot] = notification.useNotification();
-
+  const navigate = useNavigate()
   const [imageUrl, setImageUrl] = useState<string>();
 
   const [dateOfBirth, setDateOfBirth] = useState<string>();
-
 
   const [form] = Form.useForm<StudentFieldType>();
 
@@ -38,7 +39,6 @@ export const TeacherCreate = () => {
   const { mutate: studentTeacherMutate } = useTeacherStudent();
 
   console.log(imageUrl);
-  
 
   const onFinish: FormProps<TeacherFieldType>["onFinish"] = (values) => {
     if (fileList.length === 0 || !fileList) {
@@ -116,10 +116,9 @@ export const TeacherCreate = () => {
     }
   };
 
-
-
-
-
+  const goBackFn = () => {
+    navigate(-1);
+  };
   return (
     <section className="student_create">
       {contextHolder}
@@ -128,6 +127,15 @@ export const TeacherCreate = () => {
         <div className="student-create__header">
           <h2 className="create__header-title">O'qtuvchi qo’shish</h2>
           <div className="create__header-button-wrap">
+            <Form.Item label={null}>
+              <Button
+                onClick={goBackFn}
+                icon={<PaginationLeftIcon />}
+                type="default"
+              >
+                Ortga qaytish
+              </Button>
+            </Form.Item>
             <Form.Item label={null}>
               <Button onClick={onCancel} icon={<CancelIcon />} type="default">
                 Bekor qilish
