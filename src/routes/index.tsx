@@ -15,6 +15,8 @@ import { GroupPage } from "../module/admin/pages/group-page";
 import { GroupCreatePage } from "../module/admin/pages/group-create-page";
 import { NotFoundPage } from "../components/not-found-page";
 import { StudentDetail } from "../module/admin/pages/student-detail";
+import { TeacherDetail } from "../module/admin/pages/teacher-detail";
+import { GroupDetail } from "../module/admin/pages/group-detail";
 
 interface RouteT {
   path?: string;
@@ -90,6 +92,14 @@ export const routes: RouteT[] = [
       {
         path: "/admin/student-detail/:id",
         element: <StudentDetail />,
+      },
+      {
+        path: "/admin/teacher-detail/:id",
+        element: <TeacherDetail />,
+      },
+      {
+        path: "/admin/group-detail/:id",
+        element: <GroupDetail />,
       },
     ],
   },

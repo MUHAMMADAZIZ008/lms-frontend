@@ -42,8 +42,8 @@ interface Teacher {
   full_name: string;
   username: string;
   password: string;
-  role: "TEACHER" | "ADMIN" | string;
-  gender: "MALE" | "FEMALE" | string;
+  role: UserRole;
+  gender: UserGender;
   data_of_birth: string;
   created_at: string;
   updated_at: string;
@@ -267,6 +267,13 @@ export interface CourseResponse {
 
 // teacher response
 
+// teacher payment
+export interface TeacherPaymentType {
+  type: PaymentEnum;
+  sum: number;
+  teacher_id: string;
+}
+
 export interface TeacherT {
   user_id: string;
   full_name: string;
@@ -280,6 +287,8 @@ export interface TeacherT {
   created_at: string;
   updated_at: string;
   images: ImageT[];
+  PaymentForTeacher: TeacherPaymentType;
+  groups: Group[];
 }
 
 export interface TeacherResponse {
@@ -324,7 +333,7 @@ export interface Group {
   status: GroupStatus;
   created_at: string;
   updated_at: string;
-  start_date: string
+  start_date: string;
   course: Course;
   teacher: User;
   group_members: GroupMember[];
@@ -388,4 +397,11 @@ export interface OneStudentResponse {
   status: string;
   message: string;
   data: Student;
+}
+
+// one teacher
+export interface OneTeacherResponse {
+  status: string;
+  message: string;
+  data: TeacherT;
 }

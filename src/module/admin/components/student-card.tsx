@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 const StudentCard = ({ item, i }: { item: Student; i: number }) => {
   const [api, contextHolderNot] = notification.useNotification();
 
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
 
   const [isSure, setIsSure] = useState<boolean>(false);
   const { mutate } = useDeleteStudent();

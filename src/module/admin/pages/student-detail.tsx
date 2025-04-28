@@ -1,19 +1,25 @@
 import { useParams } from "react-router-dom";
 import { useGetOneStudent } from "../service/query/use-get-one-student";
-import { Button, Image } from "antd";
+import { Button, Image, notification } from "antd";
 import { DeleteIcon } from "../../../assets/components/delete-icon";
 import { EditIcon2 } from "../../../assets/components/edit-icon2";
 import "../css/student-detail.css";
-import { UserGender } from "../../../common/enum";
+import { GroupStatus, UserGender } from "../../../common/enum";
 
 export const StudentDetail = () => {
   const { id } = useParams();
+  const [api, contextHolderNot] = notification.useNotification();
   const { data, isLoading, error } = useGetOneStudent(id || "");
-
+  if (error) {
+    api.error({
+      message: error.message,
+    });
+  }
   return isLoading ? (
     <h1>Loading...</h1>
   ) : (
     <section className="student-detail">
+      {contextHolderNot}
       <div className="student-detail__header">
         <h2 className="student-detail__header-title">O'quvchi haqida</h2>
         <div className="student-detail__header-wrap">
@@ -83,7 +89,15 @@ export const StudentDetail = () => {
                       <p>{item.group.start_date.split("T")[0]}</p>
                     </li>
                     <li>
-                      <p>{item.group.status}</p>
+                      <p
+                        style={
+                          item.group.status === GroupStatus.ACTIVE
+                            ? { fontWeight: "600", color: "green" }
+                            : { fontWeight: "600", color: "red" }
+                        }
+                      >
+                        {item.group.status}
+                      </p>
                     </li>
                   </ul>
                 ))}

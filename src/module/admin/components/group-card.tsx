@@ -1,14 +1,20 @@
 import { useState } from "react";
 import { Group } from "../../../common/interface";
 import { Button, Typography } from "antd";
-import { EditIcon } from "../../../assets/components/edit-icon";
 import { DeleteIcon } from "../../../assets/components/delete-icon";
 import "../css/group-page.css";
 import { GroupStatus } from "../../../common/enum";
+import { EyeOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 export const GroupCard = ({ item, i }: { item: Group; i: number }) => {
   const [isSure, setIsSure] = useState<boolean>(false);
 
+  const navigate = useNavigate();
+
+  const navigateFn = () => {
+    navigate(`/admin/group-detail/${item.group_id}`);
+  };
   return (
     <ul className="group__content-card">
       <li>
@@ -49,9 +55,14 @@ export const GroupCard = ({ item, i }: { item: Group; i: number }) => {
         </li>
       ) : (
         <li>
-          <button>
-            <EditIcon />
-          </button>
+          <Button
+            onClick={navigateFn}
+            type="primary"
+            color="green"
+            style={{ color: "green" }}
+          >
+            <EyeOutlined />
+          </Button>
           <button onClick={() => setIsSure(true)}>
             <DeleteIcon />
           </button>

@@ -170,7 +170,7 @@ export const StudentPage = () => {
           </Button>
         </div>
         <div
-          style={isModalOpen ? { opacity: 1 } : { opacity: 0 }}
+          style={isModalOpen ? { opacity: 1 } : { opacity: 0, zIndex: -1 }}
           className="student__filter-modal"
         >
           <div className="student__modal-header">
