@@ -93,6 +93,15 @@ export interface StudentResponse {
 export interface ImageT {
   url: string;
 }
+export interface StudentPaymentT {
+  payment_id: string;
+  type: string;
+  sum: string;
+  created_at: string;
+  updated_at: string;
+  student_id: string;
+  group_id: string;
+}
 export interface Student {
   full_name: string;
   username: string;
@@ -107,6 +116,7 @@ export interface Student {
   user_id: string;
   group_members: GroupMember[];
   images: ImageT[];
+  PaymentForStudent: StudentPaymentT[];
 }
 
 export interface GroupMember {
@@ -314,6 +324,7 @@ export interface Group {
   status: GroupStatus;
   created_at: string;
   updated_at: string;
+  start_date: string
   course: Course;
   teacher: User;
   group_members: GroupMember[];
@@ -367,8 +378,14 @@ export interface filterOptionForGroup {
   isSaved?: boolean;
 }
 
-
 export interface filterOptionForCourse {
   status?: CourseStatus;
 }
 
+// one student
+
+export interface OneStudentResponse {
+  status: string;
+  message: string;
+  data: Student;
+}

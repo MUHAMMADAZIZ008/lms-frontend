@@ -13,6 +13,8 @@ import { TeacherPage } from "../module/admin/pages/teacher-page";
 import { TeacherCreate } from "../module/admin/pages/teacher-create";
 import { GroupPage } from "../module/admin/pages/group-page";
 import { GroupCreatePage } from "../module/admin/pages/group-create-page";
+import { NotFoundPage } from "../components/not-found-page";
+import { StudentDetail } from "../module/admin/pages/student-detail";
 
 interface RouteT {
   path?: string;
@@ -58,28 +60,37 @@ export const routes: RouteT[] = [
         element: <StudentCreate />,
       },
       {
-        path: '/admin/courses',
-        element: <CoursePage/>
-      },{
-        path: '/admin/course-create',
-        element: <CourseCreatePage />
+        path: "/admin/courses",
+        element: <CoursePage />,
       },
       {
-        path: '/admin/teachers',
-        element: <TeacherPage />
+        path: "/admin/course-create",
+        element: <CourseCreatePage />,
       },
       {
-        path: '/admin/teacher-create',
-        element: <TeacherCreate />
+        path: "/admin/teachers",
+        element: <TeacherPage />,
       },
       {
-        path: '/admin/groups',
-        element: <GroupPage />
+        path: "/admin/teacher-create",
+        element: <TeacherCreate />,
       },
       {
-        path: '/admin/group-create',
-        element: <GroupCreatePage />
-      }
+        path: "/admin/groups",
+        element: <GroupPage />,
+      },
+      {
+        path: "/admin/group-create",
+        element: <GroupCreatePage />,
+      },
+      {
+        path: "*",
+        element: <NotFoundPage />,
+      },
+      {
+        path: "/admin/student-detail/:id",
+        element: <StudentDetail />,
+      },
     ],
   },
 

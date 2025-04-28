@@ -30,7 +30,7 @@ export const CoursePage = () => {
 
   const [filterOption, setFilterOption] = useState<filterOptionForCourse>({});
 
-  const { data, isLoading } = useGetAllCourse(paginationData);
+  const { data, isLoading } = useGetAllCourse(paginationData, filterOption);
 
   useEffect(() => {
     const buttonCount = Math.ceil(
@@ -84,11 +84,7 @@ export const CoursePage = () => {
     setIsModalOpen(false);
   };
 
-  const filterDateFn: DatePickerProps["onChange"] = (_, dateString) => {
-    if (typeof dateString == "string") {
-      setFilterOption((state) => ({ ...state, start_date: dateString }));
-    }
-  };
+
 
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {

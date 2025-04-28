@@ -1,6 +1,6 @@
 import React, { createElement, useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Button, Layout, Menu, Input, Avatar } from "antd";
+import { Button, Layout, Menu, Input, Avatar, Modal } from "antd";
 import { layoutItem } from "./layout-item";
 import { UserOutlined } from "@ant-design/icons";
 
@@ -12,6 +12,8 @@ import LogoutIcon from "../../assets/components/logout-icon";
 import { useAuthStore } from "../../store/use-auth-store";
 
 export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [collapsed, setCollapsed] = useState(false);
   const { logOut, user } = useAuthStore();
 
@@ -19,10 +21,7 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const menu = layoutItem.map((item: any, index: number) => {
     return {
       key: index,
-      icon:
-        // <button style={{ display: "inline", margin: "0 auto", textAlign: 'center'}}>
-        createElement(item.icon),
-      // {/* </button> */}
+      icon: createElement(item.icon),
       label: (
         <Link to={item?.path || "#"}>
           {<p style={{ fontWeight: "500", fontSize: "18px" }}>{item?.title}</p>}
@@ -38,14 +37,23 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     };
   });
 
-  const logoutFn = () => {
+  // modal
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
     logOut();
     navigate("/login");
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
   };
 
   return (
-    <Layout style={{ minHeight: "100vh", overflow: 'hidden'}}>
-      {/* Sidebar */}
+    <Layout style={{ minHeight: "100vh", overflow: "hidden" }}>
       <Sider
         theme="light"
         trigger={null}
@@ -93,7 +101,17 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             </Link>
           </div>
           <div style={{ padding: "12px 0" }}>
-            <Button variant="outlined" onClick={logoutFn}>
+            <Modal
+              title="Tizimdan chiqishni tasdiqlash"
+              open={isModalOpen}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              okText='Ha'
+              cancelText='Bekor qilish'
+            >
+              <p>Tizimdan chiqishga ishonchingiz komilmi?</p>
+            </Modal>
+            <Button variant="outlined" onClick={showModal}>
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <LogoutIcon />
                 {!collapsed && <span>Chiqish</span>}
@@ -147,8 +165,8 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
 
         <Content
           style={{
-            height: 'calc(100vh - 64px)',
-            overflowY: 'auto'
+            height: "calc(100vh - 64px)",
+            overflowY: "auto",
           }}
         >
           {children}

@@ -31,7 +31,7 @@ export const GroupPage = () => {
     },
   ]);
 
-  const { data, isLoading } = useGeAllGroup(paginationData);
+  const { data, isLoading } = useGeAllGroup(paginationData, filterOption);
 
   useEffect(() => {
     const buttonCount = Math.ceil(
