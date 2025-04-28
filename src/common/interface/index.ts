@@ -405,3 +405,10 @@ export interface OneTeacherResponse {
   message: string;
   data: TeacherT;
 }
+
+// one group
+export interface OneGroupResponse {
+  status: string;
+  message: string;
+  data: Group
+}

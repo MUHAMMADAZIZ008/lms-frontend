@@ -1,0 +1,118 @@
+.group-detail__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.group-detail__header-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.group-detail__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 40px 20px;
+}
+.group-detail__left-box {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.group-detail__left_group-box {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.group-detail__left_group-box p {
+    font-size: 18px;
+}
+.group-detail__left_group-box p > span {
+    font-size: 24px;
+    font-weight: 600;
+}
+.group-detail__left_teacher-box {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.group-detail__left_teacher-box p {
+    font-size: 18px;
+}
+.group-detail__left_teacher-box p > span {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.group-detail__student-box {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.group-detail__student-title {
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+}
+.group-detail__student_title-list {
+    display: grid;
+    grid-template-columns: 30px repeat(10, 1fr);
+    padding: 20px 40px;
+
+}
+.group-detail__student_title-list p {
+    color: #9f9f9f;
+}
+
+.group-detail__student_title-list p:nth-child(2) {
+    grid-column: span 2;
+}
+
+.group-detail__student_title-list p:nth-child(3) {
+    grid-column: span 2;
+}
+.group-detail__student_title-list p:nth-child(5) {
+    grid-column: span 2;
+}
+.group-detail__student_title-list p:nth-child(6) {
+    grid-column: span 2;
+}
+.group-detail__student-list-box {
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: auto;
+}
+.group-detail__student-list {
+    padding: 10px 20px;
+    display: grid;
+    grid-template-columns: 30px repeat(10, 1fr);
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+
+.group-detail__student-list li:nth-child(2) {
+    grid-column: span 2;
+}
+.group-detail__student-list li:nth-child(3) {
+    grid-column: span 2;
+}
+.group-detail__student-list li:nth-child(5) {
+    grid-column: span 2;
+}
+.group-detail__student-list li:nth-child(6) {
+    grid-column: span 2;
+}
