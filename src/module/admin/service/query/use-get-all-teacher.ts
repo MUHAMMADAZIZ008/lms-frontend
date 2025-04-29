@@ -20,6 +20,7 @@ export const useGetAllTeacher = (
             limit: pagination?.limit,
             gender: filterOption?.gender,
             date_of_birth: filterOption?.date_of_birth,
+            full_name: filterOption?.full_name
           },
         })
         .then((res) => res.data),

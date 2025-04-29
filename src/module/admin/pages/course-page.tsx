@@ -9,9 +9,10 @@ import { filterOptionForCourse, PaginationT } from "../../../common/interface";
 import { PaginationLeftIcon } from "../../../assets/components/pagination-left-icon";
 import { PaginationRightIcon } from "../../../assets/components/pagination-right-icon";
 import { FilterIcon } from "../../../assets/components/filter-icon";
-import { CourseStatus } from "../../../common/enum";
+import { CourseStatus, SearchEnum } from "../../../common/enum";
 import { CloseIcon } from "../../../assets/components/close-icon";
 import { SaveIcon } from "../../../assets/components/save-icon";
+import { useGlobalSearch } from "../../../store/use-global-search";
 
 export const CoursePage = () => {
   const [paginationData, setPaginationData] = useState<PaginationT>({
@@ -29,6 +30,17 @@ export const CoursePage = () => {
   ]);
 
   const [filterOption, setFilterOption] = useState<filterOptionForCourse>({});
+
+  const { setInputValue, inputValue } = useGlobalSearch();
+  useEffect(() => {
+    setInputValue(undefined, SearchEnum.COURSE);
+  }, []);
+
+  useEffect(() => {
+    if (inputValue.type === SearchEnum.COURSE) {
+      setFilterOption((state) => ({ ...state, name: inputValue.value }));
+    }
+  }, [inputValue.value]);
 
   const { data, isLoading } = useGetAllCourse(paginationData, filterOption);
 

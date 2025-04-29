@@ -153,6 +153,9 @@
 
 .student-detail_payment-list-box {
     padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .student-detail_payment-list {

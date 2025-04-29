@@ -101,6 +101,7 @@ export const routes: RouteT[] = [
         path: "/admin/group-detail/:id",
         element: <GroupDetail />,
       },
+
     ],
   },
 

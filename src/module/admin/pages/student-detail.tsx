@@ -1,10 +1,24 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGetOneStudent } from "../service/query/use-get-one-student";
-import { Button, Image, notification } from "antd";
+import {
+  Button,
+  Form,
+  FormProps,
+  Image,
+  Input,
+  Modal,
+  notification,
+  Select,
+} from "antd";
 import { DeleteIcon } from "../../../assets/components/delete-icon";
 import { EditIcon2 } from "../../../assets/components/edit-icon2";
 import "../css/student-detail.css";
-import { GroupStatus, UserGender } from "../../../common/enum";
+import { GroupStatus, PaymentEnum, UserGender } from "../../../common/enum";
+import { useEffect, useState } from "react";
+import { StudentPaymentFormType } from "../../../common/interface";
+import { useCreateStudentPayment } from "../service/mutation/use-create-student-payment";
+import { useGeAllGroup } from "../service/query/use-get-all-group";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const StudentDetail = () => {
   const { id } = useParams();
@@ -15,6 +29,66 @@ export const StudentDetail = () => {
       message: error.message,
     });
   }
+  const queryClient = useQueryClient();
+  // modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const [form] = Form.useForm<StudentPaymentFormType>();
+
+  const { mutate } = useCreateStudentPayment();
+  const onFinish: FormProps<StudentPaymentFormType>["onFinish"] = (values) => {
+    values.student_id = id as string;
+    values.sum = +values.sum;
+
+    mutate(values, {
+      onSuccess: () => {
+        api.success({
+          message: "Muvaffaqiyatli yaratildi",
+        });
+        setIsModalOpen(false);
+        form.resetFields();
+        queryClient.refetchQueries({ queryKey: ["student", id] });
+      },
+      onError: (err) => {
+        api.error({
+          message: err.message,
+        });
+      },
+    });
+  };
+
+  const [groupSelectOption, setGroupSelectOption] = useState<
+    {
+      value: string;
+      label: string;
+    }[]
+  >();
+
+  const { data: groupData, isError, error: groupErr } = useGeAllGroup();
+  if (isError) {
+    api.error({
+      message: groupErr.message,
+    });
+  }
+
+  useEffect(() => {
+    const option = groupData?.data.map((item) => {
+      return {
+        value: item.group_id,
+        label: item.name,
+      };
+    });
+    setGroupSelectOption(option);
+  }, [data]);
+
   return isLoading ? (
     <h1>Loading...</h1>
   ) : (
@@ -25,7 +99,7 @@ export const StudentDetail = () => {
         <div className="student-detail__header-wrap">
           <Button icon={<DeleteIcon />}>O'chirish</Button>
           <Button icon={<EditIcon2 />}>Tahrirlash</Button>
-          <Button>To'lov qo'shish</Button>
+          <Button onClick={showModal}>To'lov qo'shish</Button>
         </div>
       </div>
       <div className="student-detail__content">
@@ -78,12 +152,14 @@ export const StudentDetail = () => {
               </div>
               <div className="student-detail_group-list-box">
                 {data?.data.group_members.map((item, i) => (
-                  <ul className="student-detail_group-list">
+                  <ul key={item.user_id} className="student-detail_group-list">
                     <li>
                       <p>{i + 1}</p>
                     </li>
                     <li>
-                      <p>{item.group.name}</p>
+                      <Link to={`/admin/group-detail/${item.group.group_id}`}>
+                        {item.group.name}
+                      </Link>
                     </li>
                     <li>
                       <p>{item.group.start_date.split("T")[0]}</p>
@@ -114,7 +190,10 @@ export const StudentDetail = () => {
             </div>
             <div className="student-detail_payment-list-box">
               {data?.data.PaymentForStudent.map((item, i) => (
-                <ul className="student-detail_payment-list">
+                <ul
+                  key={item.payment_id}
+                  className="student-detail_payment-list"
+                >
                   <li className="student-detail_payment-item">
                     <p>{i + 1}</p>
                   </li>
@@ -133,6 +212,67 @@ export const StudentDetail = () => {
           </div>
         </div>
       </div>
+      <Modal
+        open={isModalOpen}
+        title="To'lovni qabul qilish"
+        onCancel={handleCancel}
+        okText="Tashdiqlash"
+        cancelText="Bekor qilish"
+        onOk={() => form.submit()}
+      >
+        <Form onFinish={onFinish} form={form} layout="vertical">
+          <Form.Item<StudentPaymentFormType>
+            label="To'lov turi"
+            name="type"
+            rules={[{ required: true, message: "To'lov turini tanlang!" }]}
+          >
+            <Select placeholder="To'lov turini tanlang">
+              <Select.Option value={PaymentEnum.CASH}>Naqt</Select.Option>
+              <Select.Option value={PaymentEnum.CREDIT_CARD}>
+                Karta
+              </Select.Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item<StudentPaymentFormType>
+            label="To'lov miqdori"
+            name="sum"
+            rules={[
+              { required: true, message: "To'lov miqdorini kiriting!" },
+              {
+                validator: (_, value) => {
+                  if (!value || isNaN(value)) {
+                    return Promise.reject("To'lov miqdori son bo'lishi kerak!");
+                  }
+                  if (Number(value) <= 0) {
+                    return Promise.reject(
+                      "To'lov miqdori musbat son bo'lishi kerak!"
+                    );
+                  }
+                  return Promise.resolve();
+                },
+              },
+            ]}
+          >
+            <Input type="number" placeholder="Masalan: 150000" />
+          </Form.Item>
+
+          <Form.Item<StudentPaymentFormType>
+            className="student_create-inputs"
+            label="Guruh"
+            name="group_id"
+            rules={[{ required: true, message: "Guruhni tanlang!" }]}
+          >
+            <Select placeholder="Guruhni tanlang">
+              {groupSelectOption?.map((item) => (
+                <Select.Option key={item.value} value={item.value}>
+                  {item.label}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
     </section>
   );
 };

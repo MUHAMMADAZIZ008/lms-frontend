@@ -1,4 +1,4 @@
-import React, { createElement, useState } from "react";
+import React, { createElement, useEffect, useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Button, Layout, Menu, Input, Avatar, Modal } from "antd";
 import { layoutItem } from "./layout-item";
@@ -10,12 +10,21 @@ import { Link, useNavigate } from "react-router-dom";
 import { SettingsIcon } from "../../assets/components/settings-icon";
 import LogoutIcon from "../../assets/components/logout-icon";
 import { useAuthStore } from "../../store/use-auth-store";
+import { useGlobalSearch } from "../../store/use-global-search";
+import { useDebounce } from "../../common/hook/use-debounce";
 
 export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [localValue, setLocalValue] = useState("");
+  const inputValue = useDebounce(localValue, 1000);
+
+  useEffect(() => {
+    setInputValue(inputValue);
+  }, [inputValue]);
 
   const [collapsed, setCollapsed] = useState(false);
   const { logOut, user } = useAuthStore();
+  const { setInputValue } = useGlobalSearch();
 
   const navigate = useNavigate();
   const menu = layoutItem.map((item: any, index: number) => {
@@ -81,7 +90,6 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             style={{ width: collapsed ? 32 : 120, transition: "0.3s" }}
           />
         </div>
-
         {/* Menu */}
         <Menu
           theme="light"
@@ -90,7 +98,6 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
           items={menu}
           style={{ backgroundColor: "#fff" }}
         />
-
         <div style={{ marginTop: "auto", padding: "0 16px" }}>
           <div style={{ padding: "12px 0" }}>
             <Link to="/settings">
@@ -106,8 +113,8 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
               open={isModalOpen}
               onOk={handleOk}
               onCancel={handleCancel}
-              okText='Ha'
-              cancelText='Bekor qilish'
+              okText="Ha"
+              cancelText="Bekor qilish"
             >
               <p>Tizimdan chiqishga ishonchingiz komilmi?</p>
             </Modal>
@@ -140,7 +147,11 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
                 fontSize: "16px",
               }}
             />
-            <Input.Search placeholder="Qidiruv tizimi..." allowClear />
+            <Input.Search
+              placeholder="Qidiruv tizimi..."
+              allowClear
+              onChange={(e) => setLocalValue(e.target.value)}
+            />
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>

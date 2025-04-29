@@ -1,14 +1,62 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetOneTeacher } from "../service/query/use-get-one-teacher";
-import { Button, Image } from "antd";
+import {
+  Button,
+  Form,
+  FormProps,
+  Image,
+  Input,
+  Modal,
+  notification,
+  Select,
+} from "antd";
 import { DeleteIcon } from "../../../assets/components/delete-icon";
 import { EditIcon2 } from "../../../assets/components/edit-icon2";
 import "../css/teacher-detail.css";
-import { GroupStatus, UserGender } from "../../../common/enum";
+import { GroupStatus, PaymentEnum, UserGender } from "../../../common/enum";
+import { useState } from "react";
+import { TeacherPaymentFormType } from "../../../common/interface";
+import { useCreateTeacherPayment } from "../service/mutation/use-create-teacher-payment";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const TeacherDetail = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetOneTeacher(id || "");
+  const [api, contextHolder] = notification.useNotification();
+  const [form] = Form.useForm<TeacherPaymentFormType>();
+
+  const queryClient = useQueryClient();
+
+  // modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+  // form
+  const { mutate } = useCreateTeacherPayment();
+  const onFinish: FormProps<TeacherPaymentFormType>["onFinish"] = (values) => {
+    values.teacher_id = id as string;
+    values.sum = +values.sum;
+    mutate(values, {
+      onSuccess: () => {
+        api.success({
+          message: "Muvaffaqiyat to'landi",
+        });
+        setIsModalOpen(false);
+        queryClient.refetchQueries({ queryKey: ["teacher", id] });
+      },
+      onError: (err) => {
+        api.error({
+          message: err.message,
+        });
+      },
+    });
+  };
 
   return (
     <>
@@ -16,12 +64,13 @@ export const TeacherDetail = () => {
         <h1>Loading...</h1>
       ) : (
         <section className="teacher-detail">
+          {contextHolder}
           <div className="teacher-detail__header">
             <h2 className="teacher-detail__header-title">O'quvchi haqida</h2>
             <div className="teacher-detail__header-wrap">
               <Button icon={<DeleteIcon />}>O'chirish</Button>
               <Button icon={<EditIcon2 />}>Tahrirlash</Button>
-              <Button>To'lov qo'shish</Button>
+              <Button onClick={showModal}>Oylik to'lash</Button>
             </div>
           </div>
           <div className="teacher-detail__content">
@@ -72,7 +121,10 @@ export const TeacherDetail = () => {
               </div>
               <div className="teacher-detail__group-list-box">
                 {data?.data.groups.map((item, i) => (
-                  <ul className="teacher-detail__group-list">
+                  <ul
+                    key={item.teacher_id}
+                    className="teacher-detail__group-list"
+                  >
                     <li className="teacher-detail__group-item">
                       <p>{i + 1}</p>
                     </li>
@@ -98,6 +150,60 @@ export const TeacherDetail = () => {
               </div>
             </div>
           </div>
+
+          <Modal
+            title="Oylik to'lash"
+            open={isModalOpen}
+            onOk={() => form.submit()}
+            onCancel={handleCancel}
+            okText="Tasdiqlash"
+            cancelText="Bekor qilish"
+          >
+            <Form onFinish={onFinish} layout="vertical" form={form}>
+              <Form.Item<TeacherPaymentFormType>
+                label="To'lov turi"
+                name="type"
+                rules={[
+                  { required: true, message: "Iltimos, to'lov turini tanlang" },
+                ]}
+              >
+                <Select placeholder="To'lov turini tanlang">
+                  <Select.Option value={PaymentEnum.CASH}>Naqd</Select.Option>
+                  <Select.Option value={PaymentEnum.CREDIT_CARD}>
+                    Karta orqali
+                  </Select.Option>
+                </Select>
+              </Form.Item>
+
+              <Form.Item<TeacherPaymentFormType>
+                label="To'lov miqdori"
+                name="sum"
+                rules={[
+                  {
+                    required: true,
+                    message: "Iltimos, to'lov miqdorini kiriting",
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (!value || isNaN(value)) {
+                        return Promise.reject(
+                          "To'lov miqdori son bo'lishi kerak"
+                        );
+                      }
+                      if (Number(value) <= 0) {
+                        return Promise.reject(
+                          "To'lov miqdori musbat son bo'lishi kerak"
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
+              >
+                <Input type="number" placeholder="Masalan: 100000" />
+              </Form.Item>
+            </Form>
+          </Modal>
         </section>
       )}
     </>

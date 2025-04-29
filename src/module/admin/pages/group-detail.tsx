@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGetOneGroup } from "../service/query/use-get-one-group";
 import { Button } from "antd";
 import { DeleteIcon } from "../../../assets/components/delete-icon";
@@ -82,13 +82,27 @@ export const GroupDetail = () => {
               <div className="group-detail__student-list-box">
                 {data?.data.group_members.map((item, i) => (
                   <ul className="group-detail__student-list">
-                    <li><p>{i + 1}</p></li>
-                    <li><p>{item.user.full_name}</p></li>
-                    <li><p>{item.user.phone_number}</p></li>
-                    <li><p>{item.user.gender}</p></li>
-                    <li><p>{item.user.address}</p></li>
-                    <li><p>{item.user.data_of_birth.split('T')[0]}</p></li>
-                    <li><p>{item.user.username}</p></li>
+                    <li>
+                      <p>{i + 1}</p>
+                    </li>
+                    <li>
+                      <Link to={`/admin/student-detail/${item.user.user_id}`}>{item.user.full_name}</Link>
+                    </li>
+                    <li>
+                      <p>{item.user.phone_number}</p>
+                    </li>
+                    <li>
+                      <p>{item.user.gender}</p>
+                    </li>
+                    <li>
+                      <p>{item.user.address}</p>
+                    </li>
+                    <li>
+                      <p>{item.user.data_of_birth.split("T")[0]}</p>
+                    </li>
+                    <li>
+                      <p>{item.user.username}</p>
+                    </li>
                   </ul>
                 ))}
               </div>

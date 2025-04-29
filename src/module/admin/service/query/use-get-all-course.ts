@@ -20,6 +20,7 @@ export const useGetAllCourse = (
               page: paginationData?.page,
               limit: paginationData?.limit,
               status: filterOption?.status,
+              name: filterOption?.name,
             },
           })
           .then((res) => res.data),

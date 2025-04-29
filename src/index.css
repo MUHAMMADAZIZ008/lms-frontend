@@ -37,3 +37,17 @@ button {
     width: 200px !important;
     height: 156px !important;
 }
+
+.loading-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+}
+
+.no-data-text {
+    text-align: center;
+    font-size: 18px;
+    padding: 40px 0;
+    color: #999;
+}

@@ -1,4 +1,4 @@
-import { Button, DatePicker, DatePickerProps, Select } from "antd";
+import { Button, DatePicker, DatePickerProps, Empty, Select, Spin } from "antd";
 import { PlusIcon } from "../../../assets/components/plus-icon";
 import "../css/student-page.css";
 import { useEffect, useState } from "react";
@@ -9,9 +9,10 @@ import { useNavigate } from "react-router-dom";
 import { useGetAllTeacher } from "../service/query/use-get-all-teacher";
 import TeacherCard from "../components/teacher-card";
 import { FilterIcon } from "../../../assets/components/filter-icon";
-import { UserGender } from "../../../common/enum";
+import { SearchEnum, UserGender } from "../../../common/enum";
 import { CloseIcon } from "../../../assets/components/close-icon";
 import { SaveIcon } from "../../../assets/components/save-icon";
+import { useGlobalSearch } from "../../../store/use-global-search";
 
 export const TeacherPage = () => {
   const navigate = useNavigate();
@@ -20,6 +21,17 @@ export const TeacherPage = () => {
     page: 1,
   });
   const [filterOption, setFilterOption] = useState<filterOptionForTeacher>({});
+
+  const { setInputValue, inputValue } = useGlobalSearch();
+  useEffect(() => {
+    setInputValue(undefined, SearchEnum.TEACHER);
+  }, []);
+
+  useEffect(() => {
+    if (inputValue.type === SearchEnum.TEACHER) {
+      setFilterOption((state) => ({ ...state, full_name: inputValue.value }));
+    }
+  }, [inputValue.value]);
 
   const [paginationButtonCount, setPaginationButtonCount] = useState<number>(1);
   const [selectionOption, setSelectionOption] = useState<
@@ -183,54 +195,64 @@ export const TeacherPage = () => {
           </div>
           <div className="student__content-list-box">
             {isLoading ? (
-              <h2>Loading...</h2>
-            ) : (
-              data &&
-              data?.data.map((item, i) => (
+              <div className="loading-center">
+                <Spin size="large" />
+              </div>
+            ) : data?.data?.length ? (
+              data.data.map((item, i) => (
                 <TeacherCard key={item.user_id} item={item} i={i} />
               ))
+            ) : (
+              <Empty />
             )}
           </div>
         </div>
-        <div className="student__pagination-box">
-          <p className="student__pagination-text">Sahifalar</p>
-          <div className="student__pagination_button-wrap">
-            <Button
-              icon={<PaginationLeftIcon />}
-              disabled={paginationData.page <= 1 ? true : false}
-              onClick={() =>
+
+        {isLoading ? (
+          ""
+        ) : data?.data.length ? (
+          <div className="student__pagination-box">
+            <p className="student__pagination-text">Sahifalar</p>
+            <div className="student__pagination_button-wrap">
+              <Button
+                icon={<PaginationLeftIcon />}
+                disabled={paginationData.page <= 1 ? true : false}
+                onClick={() =>
+                  setPaginationData((prev) => ({
+                    ...prev,
+                    page: Math.max(prev.page - 1, 1),
+                  }))
+                }
+              />
+              <p>{paginationData.page}</p>
+              <Button
+                disabled={
+                  paginationData.page >= paginationButtonCount ? true : false
+                }
+                icon={<PaginationRightIcon />}
+                onClick={() =>
+                  setPaginationData((prev) => ({
+                    ...prev,
+                    page: Math.min(prev.page + 1, paginationButtonCount),
+                  }))
+                }
+              />
+            </div>
+            <Select
+              value={paginationData.limit}
+              options={selectionOption}
+              style={{ width: 80 }}
+              onChange={(value) =>
                 setPaginationData((prev) => ({
                   ...prev,
-                  page: Math.max(prev.page - 1, 1),
-                }))
-              }
-            />
-            <p>{paginationData.page}</p>
-            <Button
-              disabled={
-                paginationData.page >= paginationButtonCount ? true : false
-              }
-              icon={<PaginationRightIcon />}
-              onClick={() =>
-                setPaginationData((prev) => ({
-                  ...prev,
-                  page: Math.min(prev.page + 1, paginationButtonCount),
+                  limit: value,
                 }))
               }
             />
           </div>
-          <Select
-            value={paginationData.limit}
-            options={selectionOption}
-            style={{ width: 80 }}
-            onChange={(value) =>
-              setPaginationData((prev) => ({
-                ...prev,
-                limit: value,
-              }))
-            }
-          />
-        </div>
+        ) : (
+          ""
+        )}
       </div>
     </section>
   );

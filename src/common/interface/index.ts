@@ -144,14 +144,14 @@ export interface PaginationT {
 export interface StudentFieldType {
   data_of_birth: string | Date;
   phone_number: string;
-  sum: number;
-  paymentType: PaymentEnum;
+  sum?: number;
+  paymentType?: PaymentEnum;
   address: string;
   password: string;
   username: string;
   full_name: string;
   img_url: string;
-  groupId: string;
+  groupId?: string;
   gender: UserGender;
 }
 
@@ -374,21 +374,25 @@ export interface filterOptionForStudent {
   gender?: UserGender;
   group_id?: string;
   isSaved?: boolean;
+  fullname?: string;
 }
 export interface filterOptionForTeacher {
   date_of_birth?: string;
   gender?: UserGender;
   isSaved?: boolean;
+  full_name?: string;
 }
 
 export interface filterOptionForGroup {
   start_date?: string;
   status?: GroupStatus;
   isSaved?: boolean;
+  name?: string;
 }
 
 export interface filterOptionForCourse {
   status?: CourseStatus;
+  name?: string;
 }
 
 // one student
@@ -410,5 +414,20 @@ export interface OneTeacherResponse {
 export interface OneGroupResponse {
   status: string;
   message: string;
-  data: Group
+  data: Group;
+}
+
+// payment form type
+
+export interface StudentPaymentFormType {
+  type: PaymentEnum;
+  sum: number;
+  student_id: string;
+  group_id: string;
+}
+
+export interface TeacherPaymentFormType {
+  type: PaymentEnum;
+  sum: number;
+  teacher_id: string;
 }

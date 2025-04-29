@@ -27,7 +27,15 @@ export enum CourseStatus {
 }
 
 export enum GroupStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  COMPLETED = 'COMPLETED',
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  COMPLETED = "COMPLETED",
+}
+
+export enum SearchEnum {
+  DASHBOARD = "DASHBOARD",
+  TEACHER = "TEACHER",
+  STUDENT = "STUDENT",
+  GROUP = "GROUP",
+  COURSE = "COURSE",
 }

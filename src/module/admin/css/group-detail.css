@@ -59,6 +59,8 @@
 .group-detail__student-box {
     border: 1px solid #ddd;
     border-radius: 4px;
+    overflow: auto;
+
 }
 .group-detail__student-title {
     padding: 20px;
@@ -93,6 +95,7 @@
     flex-direction: column;
     gap: 10px;
     overflow: auto;
+    height: 250px;
 }
 .group-detail__student-list {
     padding: 10px 20px;

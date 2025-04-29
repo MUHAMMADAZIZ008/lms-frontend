@@ -9,11 +9,12 @@ import { Pie } from "@ant-design/charts";
 import Title from "antd/es/typography/Title";
 import { UsersIcon } from "../../../assets/components/users-icon";
 import { Skeleton } from "antd";
-import { UserRole } from "../../../common/enum";
+import { SearchEnum, UserRole } from "../../../common/enum";
 import { DashboardT } from "../../../common/interface";
+import { useGlobalSearch } from "../../../store/use-global-search";
 
 const boxes = [
-  { id: undefined , title: "Hammasi" },
+  { id: undefined, title: "Hammasi" },
   { id: UserRole.TEACHER, title: "O'qtuvchilar" },
   { id: UserRole.STUDENT, title: "O'quvchilar" },
 ];
@@ -26,13 +27,23 @@ interface chartDataT {
 export const AdminMainPage = () => {
   const [selectedBtn, setSelectedBtn] = useState<string>(boxes[0].title);
   const [chartData, setChartData] = useState<chartDataT[]>([]);
+  const { setInputValue, inputValue } = useGlobalSearch();
 
   const [dashboardConfig, setDashboardConfig] = useState<DashboardT>({
     category: undefined,
   });
+
+  useEffect(() => {
+    if (inputValue.type === SearchEnum.DASHBOARD) {
+      setDashboardConfig((state) => ({ ...state, fullname: inputValue.value }));
+    }
+  }, [inputValue.value]);
+
+  useEffect(() => {
+    setInputValue(undefined, SearchEnum.DASHBOARD);
+  }, []);
   const { data, isLoading } = useGetDashboard(dashboardConfig);
 
-  
   useEffect(() => {
     if (data?.data?.ageStats) {
       const newChartData = Object.entries(data.data.ageStats).map(

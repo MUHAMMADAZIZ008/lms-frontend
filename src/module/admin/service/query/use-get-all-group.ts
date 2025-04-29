@@ -20,6 +20,7 @@ export const useGeAllGroup = (
             limit: pagination?.limit,
             start_date: filterOption?.start_date,
             status: filterOption?.status,
+            name: filterOption?.name
           },
         })
         .then((res) => res.data),

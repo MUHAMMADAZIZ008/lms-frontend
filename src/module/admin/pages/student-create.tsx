@@ -28,7 +28,7 @@ import { useNavigate } from "react-router-dom";
 export const StudentCreate = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [api, contextHolderNot] = notification.useNotification();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [imageUrl, setImageUrl] = useState<string>();
 
   const [dateOfBirth, setDateOfBirth] = useState<string>();
@@ -59,7 +59,9 @@ export const StudentCreate = () => {
       if (dateOfBirth && imageUrl) {
         values.data_of_birth = dateOfBirth;
         values.img_url = imageUrl;
-        values.sum = +values.sum;
+        if (values.sum) {
+          values.sum = +values.sum;
+        }
         studentCreateMutate(values, {
           onSuccess: () => {
             api.success({
@@ -268,7 +270,7 @@ export const StudentCreate = () => {
             className="student_create-inputs"
             label="Guruh"
             name="groupId"
-            rules={[{ required: true, message: "Guruhni tanlang!" }]}
+            rules={[{ required: false, message: "Guruhni tanlang!" }]}
           >
             <Select
             // defaultValue={groupSelectOption && groupSelectOption[0].label}
@@ -305,7 +307,7 @@ export const StudentCreate = () => {
             className="student_create-inputs"
             label="To'lov turi"
             name="paymentType"
-            rules={[{ required: true, message: "To'lov turini tanlang!" }]}
+            rules={[{ required: false, message: "To'lov turini tanlang!" }]}
           >
             <Select>
               <Select.Option value={PaymentEnum.CASH}>Naqd</Select.Option>
@@ -318,7 +320,7 @@ export const StudentCreate = () => {
             className="student_create-inputs"
             label="To'lov summasi"
             name="sum"
-            rules={[{ required: true, message: "Summani kiriting!" }]}
+            rules={[{ required: false, message: "Summani kiriting!" }]}
           >
             <Input />
           </Form.Item>

@@ -38,7 +38,6 @@ export const TeacherCreate = () => {
 
   const { mutate: studentTeacherMutate } = useTeacherStudent();
 
-  console.log(imageUrl);
 
   const onFinish: FormProps<TeacherFieldType>["onFinish"] = (values) => {
     if (fileList.length === 0 || !fileList) {

@@ -1,4 +1,4 @@
-import { Button, DatePicker, DatePickerProps, Select } from "antd";
+import { Button, DatePicker, DatePickerProps, Empty, Select, Spin } from "antd";
 import { PlusIcon } from "../../../assets/components/plus-icon";
 import "../css/group-page.css";
 import { useGeAllGroup } from "../service/query/use-get-all-group";
@@ -11,7 +11,8 @@ import { GroupCard } from "../components/group-card";
 import { FilterIcon } from "../../../assets/components/filter-icon";
 import { CloseIcon } from "../../../assets/components/close-icon";
 import { SaveIcon } from "../../../assets/components/save-icon";
-import { GroupStatus } from "../../../common/enum";
+import { GroupStatus, SearchEnum } from "../../../common/enum";
+import { useGlobalSearch } from "../../../store/use-global-search";
 
 export const GroupPage = () => {
   const navigate = useNavigate();
@@ -20,6 +21,17 @@ export const GroupPage = () => {
     page: 1,
   });
   const [filterOption, setFilterOption] = useState<filterOptionForGroup>({});
+
+  const { setInputValue, inputValue } = useGlobalSearch();
+  useEffect(() => {
+    setInputValue(undefined, SearchEnum.GROUP);
+  }, []);
+
+  useEffect(() => {
+    if (inputValue.type === SearchEnum.GROUP) {
+      setFilterOption((state) => ({ ...state, name: inputValue.value }));
+    }
+  }, [inputValue.value]);
 
   const [paginationButtonCount, setPaginationButtonCount] = useState<number>(1);
   const [selectionOption, setSelectionOption] = useState<
@@ -42,7 +54,6 @@ export const GroupPage = () => {
   }, [data, paginationData]);
 
   useEffect(() => {
-
     const selectOption = [
       {
         value: 6,
@@ -180,53 +191,68 @@ export const GroupPage = () => {
         </div>
         <div className="group__content-list-box">
           {isLoading ? (
-            <h1>Loading...</h1>
-          ) : (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: 50,
+              }}
+            >
+              <Spin size="large" />
+            </div>
+          ) : data?.data.length ? (
             data?.data.map((item, i) => (
               <GroupCard key={item.group_id} item={item} i={i} />
             ))
+          ) : (
+            <Empty />
           )}
         </div>
-
-        <div className="group__pagination-box">
-          <p className="group__pagination-text">Sahifalar</p>
-          <div className="group__pagination_button-wrap">
-            <Button
-              icon={<PaginationLeftIcon />}
-              disabled={paginationData.page <= 1 ? true : false}
-              onClick={() =>
+        {isLoading ? (
+          ""
+        ) : data?.data.length ? (
+          <div className="group__pagination-box">
+            <p className="group__pagination-text">Sahifalar</p>
+            <div className="group__pagination_button-wrap">
+              <Button
+                icon={<PaginationLeftIcon />}
+                disabled={paginationData.page <= 1 ? true : false}
+                onClick={() =>
+                  setPaginationData((prev) => ({
+                    ...prev,
+                    page: Math.max(prev.page - 1, 1),
+                  }))
+                }
+              />
+              <p>{paginationData.page}</p>
+              <Button
+                disabled={
+                  paginationData.page >= paginationButtonCount ? true : false
+                }
+                icon={<PaginationRightIcon />}
+                onClick={() =>
+                  setPaginationData((prev) => ({
+                    ...prev,
+                    page: Math.min(prev.page + 1, paginationButtonCount),
+                  }))
+                }
+              />
+            </div>
+            <Select
+              value={paginationData.limit}
+              options={selectionOption}
+              style={{ width: 80 }}
+              onChange={(value) =>
                 setPaginationData((prev) => ({
                   ...prev,
-                  page: Math.max(prev.page - 1, 1),
-                }))
-              }
-            />
-            <p>{paginationData.page}</p>
-            <Button
-              disabled={
-                paginationData.page >= paginationButtonCount ? true : false
-              }
-              icon={<PaginationRightIcon />}
-              onClick={() =>
-                setPaginationData((prev) => ({
-                  ...prev,
-                  page: Math.min(prev.page + 1, paginationButtonCount),
+                  limit: value,
                 }))
               }
             />
           </div>
-          <Select
-            value={paginationData.limit}
-            options={selectionOption}
-            style={{ width: 80 }}
-            onChange={(value) =>
-              setPaginationData((prev) => ({
-                ...prev,
-                limit: value,
-              }))
-            }
-          />
-        </div>
+        ) : (
+          ""
+        )}
       </div>
     </section>
   );
