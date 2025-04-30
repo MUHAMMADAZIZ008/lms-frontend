@@ -201,7 +201,7 @@ export const StudentDetail = () => {
                     <p>{item.sum}</p>
                   </li>
                   <li className="student-detail_payment-item">
-                    <p>{item.type}</p>
+                    <p>{item.type === PaymentEnum.CASH ? "Naqd" : "Karta"}</p>{" "}
                   </li>
                   <li className="student-detail_payment-item">
                     <p>{item.created_at.split("T")[0]}</p>

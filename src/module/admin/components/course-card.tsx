@@ -1,5 +1,4 @@
 import { Course } from "../../../common/interface";
-import { EditIcon } from "../../../assets/components/edit-icon";
 import { DeleteIcon } from "../../../assets/components/delete-icon";
 import "../css/course-page.css";
 import { CourseStatus } from "../../../common/enum";
@@ -7,6 +6,8 @@ import { useState } from "react";
 import { Button, notification, Typography } from "antd";
 import { useDeleteCourse } from "../service/mutation/use-delete-course";
 import { useQueryClient } from "@tanstack/react-query";
+import { EyeOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 export const CourseCard = ({ item, i }: { item: Course; i: number }) => {
   const [isSure, setIsSure] = useState<boolean>(false);
@@ -32,6 +33,11 @@ export const CourseCard = ({ item, i }: { item: Course; i: number }) => {
         });
       },
     });
+  };
+  const navigate = useNavigate();
+
+  const navigateFn = () => {
+    navigate(`/admin/course-detail/${item.course_id}`);
   };
   return (
     <ul className="course__list" key={item.course_id}>
@@ -74,9 +80,14 @@ export const CourseCard = ({ item, i }: { item: Course; i: number }) => {
         </li>
       ) : (
         <li>
-          <button>
-            <EditIcon />
-          </button>
+          <Button
+            onClick={navigateFn}
+            type="primary"
+            color="green"
+            style={{ color: "green" }}
+          >
+            <EyeOutlined />
+          </Button>
           <button onClick={() => setIsSure(true)}>
             <DeleteIcon />
           </button>

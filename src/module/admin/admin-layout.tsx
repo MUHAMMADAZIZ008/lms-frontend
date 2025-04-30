@@ -100,7 +100,7 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
         />
         <div style={{ marginTop: "auto", padding: "0 16px" }}>
           <div style={{ padding: "12px 0" }}>
-            <Link to="/settings">
+            <Link to="/admin/settings">
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <SettingsIcon />
                 {!collapsed && <span>Sozlamalar</span>}

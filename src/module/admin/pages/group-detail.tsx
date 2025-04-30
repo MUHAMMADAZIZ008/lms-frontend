@@ -1,14 +1,78 @@
 import { Link, useParams } from "react-router-dom";
 import { useGetOneGroup } from "../service/query/use-get-one-group";
-import { Button } from "antd";
+import { Button, Form, FormProps, Modal, notification, Select } from "antd";
 import { DeleteIcon } from "../../../assets/components/delete-icon";
 import { EditIcon2 } from "../../../assets/components/edit-icon2";
 import "../css/group-detail.css";
 import { GroupStatus, UserGender } from "../../../common/enum";
+import { useGetNoStudent } from "../service/query/use-get-no-student";
+import { useEffect, useState } from "react";
+import { GroupMemberFormType } from "../../../common/interface";
+import { useCreateGroupMember } from "../service/mutation/use-create-group-member";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const GroupDetail = () => {
   const { id } = useParams();
+  const [api, contextHolder] = notification.useNotification();
   const { data, isLoading, error } = useGetOneGroup(id || "");
+
+  if (error) {
+    api.error({
+      message: error.message,
+    });
+  }
+
+  // add student
+  const queryClient = useQueryClient();
+  const [form] = Form.useForm();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [studentSelectorOption, setStudentSelectorOption] = useState<
+    {
+      value: string;
+      label: string;
+    }[]
+  >();
+
+  const { data: noStudentData } = useGetNoStudent(
+    data?.data.group_id as string
+  );
+
+  useEffect(() => {
+    const option = noStudentData?.data.map((item) => ({
+      value: item.user_id,
+      label: item.full_name,
+    }));
+    setStudentSelectorOption(option);
+  }, [noStudentData]);
+
+  const showModal = () => {
+    form.resetFields();
+    setIsModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const { mutate } = useCreateGroupMember();
+
+  const onFinish: FormProps<GroupMemberFormType>["onFinish"] = (values) => {
+    values.groupId = data?.data.group_id as string;
+    mutate(values, {
+      onSuccess: () => {
+        api.success({
+          message: "Muvaffaqiyatli qo'shildi!",
+        });
+        setIsModalOpen(false);
+        queryClient.refetchQueries({ queryKey: ["student", id] });
+      },
+      onError: (err) => {
+        api.error({
+          message: err.message,
+        });
+      },
+    });
+  };
 
   return (
     <>
@@ -16,12 +80,13 @@ export const GroupDetail = () => {
         <h1>Loading...</h1>
       ) : (
         <section className="group__detail">
+          {contextHolder}
           <div className="group-detail__header">
-            <h2 className="group-detail__header-title">O'quvchi haqida</h2>
+            <h2 className="group-detail__header-title">Guruh haqida</h2>
             <div className="group-detail__header-wrap">
               <Button icon={<DeleteIcon />}>O'chirish</Button>
               <Button icon={<EditIcon2 />}>Tahrirlash</Button>
-              <Button>O'quvchi qo'shish</Button>
+              <Button onClick={showModal}>O'quvchi qo'shish</Button>
             </div>
           </div>
           <div className="group-detail__content">
@@ -81,12 +146,14 @@ export const GroupDetail = () => {
               </div>
               <div className="group-detail__student-list-box">
                 {data?.data.group_members.map((item, i) => (
-                  <ul className="group-detail__student-list">
+                  <ul key={item.user_id} className="group-detail__student-list">
                     <li>
                       <p>{i + 1}</p>
                     </li>
                     <li>
-                      <Link to={`/admin/student-detail/${item.user.user_id}`}>{item.user.full_name}</Link>
+                      <Link to={`/admin/student-detail/${item.user.user_id}`}>
+                        {item.user.full_name}
+                      </Link>
                     </li>
                     <li>
                       <p>{item.user.phone_number}</p>
@@ -108,6 +175,39 @@ export const GroupDetail = () => {
               </div>
             </div>
           </div>
+          <Modal
+            title="O'quvchi qo'shish"
+            open={isModalOpen}
+            onOk={() => form.submit()}
+            onCancel={handleCancel}
+            okText="Saqlash"
+            cancelText="Bekor qilish"
+          >
+            <Form layout="vertical" onFinish={onFinish} form={form}>
+              <Form.Item<GroupMemberFormType>
+                label="O'quvchi Tanlash"
+                name="userId"
+                required
+              >
+                <Select
+                  showSearch
+                  placeholder="O'quvchi tanlang"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.children as unknown as string)
+                      ?.toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                >
+                  {studentSelectorOption?.map((item) => (
+                    <Select.Option value={item.value} key={item.value}>
+                      {item.label}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Form>
+          </Modal>
         </section>
       )}
     </>

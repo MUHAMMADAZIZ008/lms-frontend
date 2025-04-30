@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useGetOneTeacher } from "../service/query/use-get-one-teacher";
 import {
   Button,
@@ -49,6 +49,7 @@ export const TeacherDetail = () => {
         });
         setIsModalOpen(false);
         queryClient.refetchQueries({ queryKey: ["teacher", id] });
+        form.resetFields();
       },
       onError: (err) => {
         api.error({
@@ -66,7 +67,7 @@ export const TeacherDetail = () => {
         <section className="teacher-detail">
           {contextHolder}
           <div className="teacher-detail__header">
-            <h2 className="teacher-detail__header-title">O'quvchi haqida</h2>
+            <h2 className="teacher-detail__header-title">O'qtuvchi haqida</h2>
             <div className="teacher-detail__header-wrap">
               <Button icon={<DeleteIcon />}>O'chirish</Button>
               <Button icon={<EditIcon2 />}>Tahrirlash</Button>
@@ -111,42 +112,78 @@ export const TeacherDetail = () => {
                 </p>
               </div>
             </div>
-            <div className="teacher-detail__content-group-box">
-              <h3 className="teacher-detail__group_title">Guruhlar</h3>
-              <div className="teacher-detail_group-title_list">
-                <p>#</p>
-                <p>Nomi</p>
-                <p>Boshlangan sana</p>
-                <p>Holati</p>
+            <div className="teacher-detail__content-right">
+              <div className="teacher-detail__content-group-box">
+                <h3 className="teacher-detail__group_title">Guruhlar</h3>
+                <div className="teacher-detail_group-title_list">
+                  <p>#</p>
+                  <p>Nomi</p>
+                  <p>Boshlangan sana</p>
+                  <p>Holati</p>
+                </div>
+                <div className="teacher-detail__group-list-box">
+                  {data?.data.groups.map((item, i) => (
+                    <ul
+                      key={item.teacher_id}
+                      className="teacher-detail__group-list"
+                    >
+                      <li className="teacher-detail__group-item">
+                        <p>{i + 1}</p>
+                      </li>
+                      <li className="teacher-detail__group-item">
+                        <Link to={`/admin/group-detail/${item.group_id}`}>
+                          {item.name}
+                        </Link>{" "}
+                      </li>
+                      <li className="teacher-detail__group-item">
+                        <p>{item.start_date.split("T")[0]}</p>
+                      </li>
+                      <li className="teacher-detail__group-item">
+                        <p
+                          style={
+                            item.status === GroupStatus.ACTIVE
+                              ? { fontWeight: "600", color: "green" }
+                              : { fontWeight: "600", color: "red" }
+                          }
+                        >
+                          {item.status}
+                        </p>
+                      </li>
+                    </ul>
+                  ))}
+                </div>
               </div>
-              <div className="teacher-detail__group-list-box">
-                {data?.data.groups.map((item, i) => (
-                  <ul
-                    key={item.teacher_id}
-                    className="teacher-detail__group-list"
-                  >
-                    <li className="teacher-detail__group-item">
-                      <p>{i + 1}</p>
-                    </li>
-                    <li className="teacher-detail__group-item">
-                      <p>{item.name}</p>
-                    </li>
-                    <li className="teacher-detail__group-item">
-                      <p>{item.start_date.split("T")[0]}</p>
-                    </li>
-                    <li className="teacher-detail__group-item">
-                      <p
-                        style={
-                          item.status === GroupStatus.ACTIVE
-                            ? { fontWeight: "600", color: "green" }
-                            : { fontWeight: "600", color: "red" }
-                        }
-                      >
-                        {item.status}
-                      </p>
-                    </li>
-                  </ul>
-                ))}
+              <div className="teacher-detail__content-payment-box">
+                <h3 className="teacher-detail__payment_title">To'lovlar</h3>
+                <div className="teacher-detail__payment_title_list">
+                  <p>#</p>
+                  <p>Miqdori</p>
+                  <p>Turi</p>
+                  <p>Berilgan sana</p>
+                </div>
+                <div className="teacher-detail__payment-list-box">
+                  {data?.data.PaymentForTeacher.map((item, i) => (
+                    <ul
+                      key={item.payment_id}
+                      className="teacher-detail__payment-list"
+                    >
+                      <li className="teacher-detail__payment-item">
+                        <p>{i + 1}</p>
+                      </li>
+                      <li className="teacher-detail__payment-item">
+                        <p>{item.sum}</p>
+                      </li>
+                      <li className="teacher-detail__payment-item">
+                        <p>
+                          {item.type === PaymentEnum.CASH ? "Naqd" : "Karta"}
+                        </p>
+                      </li>
+                      <li className="teacher-detail__payment-item">
+                        <p>{item.created_at.split("T")[0]}</p>
+                      </li>
+                    </ul>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

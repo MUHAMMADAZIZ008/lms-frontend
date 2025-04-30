@@ -269,6 +269,9 @@ export interface CourseResponse {
 
 // teacher payment
 export interface TeacherPaymentType {
+  created_at: string;
+  updated_at: string;
+  payment_id: string;
   type: PaymentEnum;
   sum: number;
   teacher_id: string;
@@ -287,7 +290,7 @@ export interface TeacherT {
   created_at: string;
   updated_at: string;
   images: ImageT[];
-  PaymentForTeacher: TeacherPaymentType;
+  PaymentForTeacher: TeacherPaymentType[];
   groups: Group[];
 }
 
@@ -430,4 +433,22 @@ export interface TeacherPaymentFormType {
   type: PaymentEnum;
   sum: number;
   teacher_id: string;
+}
+
+// one Course response
+export interface OneCourseResponse extends Course {
+  groups: Group[];
+}
+
+// no student
+export interface NoStudentResponse {
+  status: number;
+  message: string;
+  data: Omit<Omit<Student, "images">, "PaymentForStudent">[];
+}
+
+// group member
+export interface GroupMemberFormType {
+  groupId: string;
+  userId: string;
 }

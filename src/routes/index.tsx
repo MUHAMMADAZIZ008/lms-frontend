@@ -17,6 +17,7 @@ import { NotFoundPage } from "../components/not-found-page";
 import { StudentDetail } from "../module/admin/pages/student-detail";
 import { TeacherDetail } from "../module/admin/pages/teacher-detail";
 import { GroupDetail } from "../module/admin/pages/group-detail";
+import { CourseDetail } from "../module/admin/pages/course-detail";
 
 interface RouteT {
   path?: string;
@@ -101,7 +102,10 @@ export const routes: RouteT[] = [
         path: "/admin/group-detail/:id",
         element: <GroupDetail />,
       },
-
+      {
+        path: '/admin/course-detail/:id',
+        element: <CourseDetail />
+      }
     ],
   },
 
