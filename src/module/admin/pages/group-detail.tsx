@@ -187,7 +187,9 @@ export const GroupDetail = () => {
               <Form.Item<GroupMemberFormType>
                 label="O'quvchi Tanlash"
                 name="userId"
-                required
+                rules={[
+                  { required: true, message: "Iltimos, o'quvchini tanlang" },
+                ]}
               >
                 <Select
                   showSearch
