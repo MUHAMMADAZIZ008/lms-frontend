@@ -62,7 +62,7 @@ export const AdminMainPage = () => {
     angleField: "value",
     colorField: "type",
     radius: 1,
-    innerRadius: 0.5,
+    innerRadius: 0,
     label: { text: "value", style: { fontWeight: "bold" } },
     legend: { color: { title: false, position: "right", rowPadding: 5 } },
   };
@@ -147,8 +147,8 @@ export const AdminMainPage = () => {
                             : "#FF8484",
                       }}
                     >
-                      {data?.data.income.percent >= 0 ? "+" : ""}
-                      {data?.data.income.percent}%
+                      {data?.data.income.percent >= 0 ? " +" : " "}
+                      {data?.data.income.percent.toFixed(2)}%
                     </span>
                   )}
                 </p>
@@ -169,8 +169,8 @@ export const AdminMainPage = () => {
                           data?.data.cost.percent >= 0 ? "#3aada8" : "#FF8484",
                       }}
                     >
-                      {data?.data.cost.percent >= 0 ? "+" : ""}
-                      {data?.data.cost.percent}%
+                      {data?.data.cost.percent >= 0 ? " +" : " "}
+                      {data?.data.cost.percent.toFixed(2)}%
                     </span>
                   )}
                 </p>

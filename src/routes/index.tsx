@@ -18,6 +18,7 @@ import { StudentDetail } from "../module/admin/pages/student-detail";
 import { TeacherDetail } from "../module/admin/pages/teacher-detail";
 import { GroupDetail } from "../module/admin/pages/group-detail";
 import { CourseDetail } from "../module/admin/pages/course-detail";
+import { SettingsPage } from "../module/admin/pages/settings-page";
 
 interface RouteT {
   path?: string;
@@ -103,9 +104,13 @@ export const routes: RouteT[] = [
         element: <GroupDetail />,
       },
       {
-        path: '/admin/course-detail/:id',
-        element: <CourseDetail />
-      }
+        path: "/admin/course-detail/:id",
+        element: <CourseDetail />,
+      },
+      {
+        path: "/admin/settings",
+        element: <SettingsPage />,
+      },
     ],
   },
 

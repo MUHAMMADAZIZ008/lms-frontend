@@ -206,6 +206,7 @@ export interface User {
   data_of_birth: string;
   created_at: string;
   updated_at: string;
+  images: ImageT[];
 }
 
 export interface GroupMember {
@@ -451,4 +452,12 @@ export interface NoStudentResponse {
 export interface GroupMemberFormType {
   groupId: string;
   userId: string;
+}
+
+// get profile
+
+export interface GetProfileResponse {
+  status: number
+  message: string
+  data: User
 }
