@@ -1,4 +1,4 @@
-import { Button, Form, FormProps, Input, message, notification } from "antd";
+import { Button, Form, FormProps, Input, notification } from "antd";
 import useLogin from "./service/mutation/use-login";
 import { SaveCookie } from "../../config/cookie";
 import { CookiesEnum, UserRole } from "../../common/enum";
@@ -34,7 +34,7 @@ const Login = () => {
           navigate("/teacher");
         }
       },
-      onError(error) {
+      onError(error: any) {
         if (error.response.data.statusCode === 401) {
           api.error({
             message: "Parol yoki username xato!",

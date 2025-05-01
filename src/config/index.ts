@@ -1,7 +1,5 @@
 import axios from "axios";
 import Cookie from "js-cookie";
-import createAuthRefreshInterceptor from "axios-auth-refresh";
-import { GetCookie } from "./cookie";
 import { CookiesEnum } from "../common/enum";
 
 export const request = axios.create({

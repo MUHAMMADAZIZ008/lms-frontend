@@ -1,4 +1,4 @@
-import { Button, DatePickerProps, Empty, Select } from "antd";
+import { Button, Empty, Select } from "antd";
 import { PlusIcon } from "../../../assets/components/plus-icon";
 import "../css/course-page.css";
 import { useNavigate } from "react-router-dom";

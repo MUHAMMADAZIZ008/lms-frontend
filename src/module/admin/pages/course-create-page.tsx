@@ -24,7 +24,7 @@ export const CourseCreatePage = () => {
         });
         form.resetFields();
       },
-      onError: (err) => {
+      onError: (err: any) => {
         if (err.response.data.error === "Unprocessable Entity") {
           err.response.data.message.map((item: string) => {
             api.error({

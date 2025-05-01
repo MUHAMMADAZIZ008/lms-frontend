@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { DeleteIcon } from "../../../assets/components/delete-icon";
 import { TeacherT } from "../../../common/interface";
-import { Button, Flex, Image, notification, Typography } from "antd";
+import { Button, Image, notification, Typography } from "antd";
 import { useDeleteStudent } from "../service/mutation/use-delete-student";
 import { useQueryClient } from "@tanstack/react-query";
 import { EyeOutlined } from "@ant-design/icons";

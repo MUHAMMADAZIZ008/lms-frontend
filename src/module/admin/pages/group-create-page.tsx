@@ -44,7 +44,7 @@ export const GroupCreatePage = () => {
         });
         form.resetFields();
       },
-      onError: (err) => {
+      onError: (err: any) => {
         const errData = err?.response?.data;
         if (errData.statusCode === 409) {
           api.error({

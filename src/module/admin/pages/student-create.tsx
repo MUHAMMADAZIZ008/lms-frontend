@@ -71,7 +71,7 @@ export const StudentCreate = () => {
             fileList.length = 0;
             setImageUrl("");
           },
-          onError: (err) => {
+          onError: (err: any) => {
             api.error({
               message: err?.response?.data?.message,
             });
