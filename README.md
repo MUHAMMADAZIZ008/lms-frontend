@@ -22,7 +22,7 @@ Bu loyiha — ERP (Enterprise Resource Planning) tizimining frontend qismi hisob
 ## 🚀 Loyihani ishga tushurish
 
 ```bash
-git clone https://github.com/username/erp-frontend.git
+git clone https://github.com/MUHAMMADAZIZ008/lms-frontend.git
 cd erp-frontend
 npm install
 npm start
