@@ -23,6 +23,6 @@ Bu loyiha — ERP (Enterprise Resource Planning) tizimining frontend qismi hisob
 
 ```bash
 git clone https://github.com/MUHAMMADAZIZ008/lms-frontend.git
-cd erp-frontend
+cd lms-frontend
 npm install
 npm start
